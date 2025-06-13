@@ -206,9 +206,7 @@
 </head>
 
 <body>
-  <video autoplay loop id="bg-video" style="display: none;">
-    <source src="assets/video.mp4" type="video/mp4" />
-  </video>
+  <audio id="audioPlayer" src="assets/music.mp3"></audio>
   <div id="bg" class="row justify-content-center" style="align-items: center;">
     <div class=" col-sm-6 col-md-8 p-0">
       <img id="imgGif" src="assets/hello.gif" style="width: 100%;">
@@ -281,7 +279,7 @@
     document.addEventListener('DOMContentLoaded', function () {
 
       document.body.addEventListener('click', function () {
-        document.getElementById('bg-video').play();
+        document.getElementById('audioPlayer').play();
       }, { once: true }); // Chỉ cần click 1 lần
       const btnNo = document.getElementById('btn-No');
       const btnYes = document.getElementById('btn-Yes');
