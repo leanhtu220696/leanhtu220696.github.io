@@ -308,16 +308,14 @@
         } else {
           document.getElementById('heart').style.display = 'block';
           countYes++;
+          document.getElementById('button').style.display = 'none';
+          document.getElementById('heart').style.display = 'none';
+          document.getElementById('imgGif').src = "assets/yes.gif"
+          document.getElementById('title').innerText = `Tuyệt vời ${String.fromCodePoint(0x1F60d)}`;
           setTimeout(() => {
-            document.getElementById('imgGif').src = "assets/yes.gif"
-            document.getElementById('title').innerText = `Tuyệt vời ${String.fromCodePoint(0x1F60d)}`;
-            document.getElementById('button').style.display = 'none';
-            document.getElementById('heart').style.display = 'none';
-            setTimeout(() => {
-              document.getElementById('bg').style.display = "none"
-              document.getElementById('bg_heart').style.display = `flex`;
-            }, 2000)
-          }, 3000)
+            document.getElementById('bg').style.display = "none"
+            document.getElementById('bg_heart').style.display = `flex`;
+          }, 2500)
           updateClickCount(countYes)
           console.log("countYes", countYes);
         }
