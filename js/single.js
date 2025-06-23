@@ -99,11 +99,9 @@
                     <!-- emphasis -->
                     <h5 id="link">Link</h5>
                     <div class="body-link">
-                        ${fileData.map(file => `<p><a href="${file.link}">${file.name}</a></p>
-                                <embed src="${file.link}"
+                        ${fileData.map(file => `<h6><a href="https://drive.google.com/file/d/1VyvzIgyWSq-bG6gyP1CR-9OQ994Q94Wx/preview">${file.name}</a></h6>
+                                <embed src="https://drive.google.com/file/d/1VyvzIgyWSq-bG6gyP1CR-9OQ994Q94Wx/preview"
                                 width="100%" height="600px" type="application/pdf">
-                                <iframe src="${file.link}"
-                                width="100%" height="600px" allow="autoplay">
                                 <br/>`).join('')}
                     </div>
                     <hr>
