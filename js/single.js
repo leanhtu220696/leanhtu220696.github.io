@@ -69,7 +69,7 @@
                 li.title = `${name}`;
                 li.className = className;
                 li.innerHTML = `
-                        <a href="list.html?id=${doc.id}">${doc.name}</a>
+                        <a href="list.html?document_id=${doc.id}">${doc.name}</a>
                         ${show ? `<ul>
                             ${data.map(folder => folder.parent == doc.id ? `
                                 <li class="sidelist ${folderId == folder.id ? "sidelist parent active" : "" }">
