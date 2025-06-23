@@ -11,223 +11,284 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Cho mình làm quen nhé</title>
+  <title>GoDocs documentation theme</title>
 
   <!-- mobile responsive meta -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- theme meta -->
+  <meta name="theme-name" content="godocs" />
 
   <!-- ** Plugins Needed for the Project ** -->
   <!-- plugins -->
   <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="plugins/themify-icons/themify-icons.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <style>
-    body {
-      background-color: #FFC0CB;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100vw;
-      height: 100vh;
-    }
+  <!-- Main Stylesheet -->
+  <link href="css/style.css" rel="stylesheet">
 
-    h3 {
-      font-size: 24px;
-      margin-top: 20px;
-    }
-
-    button {
-      width: 100px;
-      border: 1px solid rgba(226, 107, 142, 0.9);
-      border-radius: 20px;
-      box-shadow: 0px 5px 25px rgba(226, 107, 142, 0.9);
-      background-color: rgba(226, 107, 142, 0.9);
-      color: white;
-    }
-
-    button:active,
-    button:hover,
-    button:focus {
-      width: 100px;
-      border: 1px solid rgba(226, 107, 142, 0.8);
-      border-radius: 20px;
-      box-shadow: 0px 5px 25px rgba(226, 107, 142, 0.8);
-      background-color: rgba(226, 107, 142, 0.8);
-      color: white;
-      outline: #FFC0CB;
-    }
-
-    @media screen and (max-width: 575.98px) {
-      h3 {
-        font-size: 18px;
-      }
-    }
-
-    .center {
-      display: flex;
-    }
-
-    .back {
-      position: fixed;
-      padding: 0;
-      margin: 0;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: white;
-      animation-name: backdiv;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-    }
-
-    .heart {
-      position: absolute;
-      margin: auto;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background-color: pink;
-      height: 50px;
-      width: 50px;
-      transform: rotate(-45deg);
-      animation-name: beat;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-    }
-
-    .heart:after {
-      background-color: pink;
-      content: "";
-      border-radius: 50%;
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      top: 0px;
-      left: 25px;
-    }
-
-    .heart:before {
-      background-color: pink;
-      content: "";
-      border-radius: 50%;
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      top: -25px;
-      left: 0px;
-    }
-
-    @keyframes backdiv {
-      50% {
-        background: #ffe6f2;
-      }
-    }
-
-    @keyframes beat {
-      0% {
-        transform: scale(1) rotate(-45deg);
-      }
-
-      50% {
-        transform: scale(0.6) rotate(-45deg);
-      }
-    }
-
-    .bg_heart2 {
-      position: relative;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden
-    }
-
-    .heart2 {
-      position: absolute;
-      top: -50%;
-      -webkit-transform: rotate(-45deg);
-      -moz-transform: rotate(-45deg);
-      -m-transform: rotate(-45deg);
-      transform: rotate(-45deg)
-    }
-
-    .heart2:before {
-      position: absolute;
-      top: -50%;
-      left: 0;
-      display: block;
-      content: "";
-      width: 100%;
-      height: 100%;
-      background: inherit;
-      border-radius: 100%;
-    }
-
-    .heart2:after {
-      position: absolute;
-      top: 0;
-      right: -50%;
-      display: block;
-      content: "";
-      width: 100%;
-      height: 100%;
-      background: inherit;
-      border-radius: 100%;
-    }
-
-    @-webkit-keyframes love {
-      0% {
-        top: 110%
-      }
-    }
-
-    @-moz-keyframes love {
-      0% {
-        top: 110%
-      }
-    }
-
-    @-ms-keyframes love {
-      0% {
-        top: 110%
-      }
-    }
-
-    @keyframes love {
-      0% {
-        top: 110%
-      }
-    }
-  </style>
-
+  <!--Favicon-->
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 
 </head>
 
 <body>
-  <audio id="audioPlayer" src="assets/music.mp3"></audio>
-  <div id="bg" class="row justify-content-center" style="align-items: center;">
-    <div class=" col-sm-6 col-md-8 p-0">
-      <img id="imgGif" src="assets/hello.gif" style="width: 100%;">
-      <h3 id="title" style="text-align: center;">Chào cậu cho mình làm quen nhá ?</h3>
-    </div>
-    <div id="button" class="row col-sm-6 col-md-8" style="justify-content: space-around; margin-top: 20px;">
-      <button id="btn-Yes">Đồng ý</button>
-      <button id="btn-No">Không</button>
-    </div>
-    <div id="heart" style="display: none;">
-      <div class="back"></div>
-      <div class="heart"></div>
-    </div>
 
-  </div>
-  <div id="bg_heart" class="bg_heart2 row justify-content-center" style="display:none; align-items: center;">
-    <div class="col-sm-10 col-md-4  p-0">
-      <img id='imgGif' src='assets/girl (3).png' style='width: 100%;'>
+  <header class="sticky-top navigation">
+    <div class=container>
+      <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+        <!-- <a class=navbar-brand href="index.html"><img class="img-fluid" src="images/logo.png" alt="godocs"></a> -->
+        <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+          <i class="ti-align-right h4 text-dark"></i></button>
+        <div class="collapse navbar-collapse text-center" id=navigation>
+          <ul class="navbar-nav mx-auto align-items-center">
+            <li class="nav-item"><a class="nav-link" href="index.html">Trang chủ</a></li>
+            <li class="nav-item"><a class="nav-link" href="list.html?document_id=1">Danh sách bài giảng</a></li>
+            <li class="nav-item"><a class="nav-link" href="search.html">Tìm kiếm bài giảng</a></li>
+          </ul>
+          <!-- <a href="changelog.html" class="btn btn-sm btn-outline-primary ml-lg-4">changelog</a>
+          <a href="contact.html" class="btn btn-sm btn-primary ml-lg-4">contact</a> -->
+        </div>
+      </nav>
     </div>
-  </div>
+  </header>
 
+  <!-- banner -->
+  <section class="section pb-0">
+    <!-- <video autoplay muted loop id="bg-video">
+      <source src="images/course-video.mp4" type="video/mp4" />
+    </video> -->
+    <div class="container">
+      <div class="row justify-content-between align-items-center">
+        <div class="col-lg-7 text-center text-lg-left">
+          <h1 class="mb-4">Hồ sơ bài giảng điện tử</h1>
+          <p style="font-size: 20px;" class="mb-4"><b>Giáo viên:</b> Nguyễn Thị Thanh Thủy - Khoa Luật</p>
+          <form class="search-wrapper" action="search.html">
+            <input id="search-by" name="s" type="search" class="form-control form-control-lg"
+              placeholder="Search Here...">
+            <button type="submit" class="btn btn-primary">Search</button>
+          </form>
+        </div>
+        <div class="col-lg-4 d-lg-block d-none">
+          <img src="images/banner.png" alt="illustration" class="img-fluid">
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /banner -->
+
+  <!-- call to action -->
+  <section class="section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-4 text-center d-lg-block d-none">
+          <img src="images/avatar.png" class="img-fluid" alt="">
+        </div>
+        <div class="col-lg-8 text-lg-left text-center">
+          <h3 class="mb-3">Thông tin giáo viên</h3>
+          <p>
+            <b>Họ tên giáo viên: </b>NGUYỄN THỊ THANH THỦY<br>
+            <b>cấp bậc: </b>NGUYỄN THỊ THANH THỦY<br>
+            <b>Chức danh: </b> Giảng viên<br>
+            <b>Thời gian giảng dạy: </b> dolor sit amet consectetur adipisicing elit<br>
+            <b>Thành tích: </b>dolor sit amet consectetur adipisicing elit dolor sit amet consectetur adipisicing elit
+            dolor sit amet consectetur adipisicing elit<br>
+          </p>
+          <!-- <a href="contact.html" class="btn btn-primary">Submit a ticket</a> -->
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /call to action -->
+
+  <!-- faq -->
+  <section class="section pb-0">
+    <div class="container">
+      <h2 class="section-title">Giới thiệu hồ sơ</h2>
+      <div class="row masonry-wrapper">
+        <!-- faq item -->
+        <div class="col-md-12 mb-4">
+          <div class="card card-lg">
+            <div class="card-body">
+              <h3 class="card-title h5">Giới thiệu chung</h3>
+              <p class="card-text content">Lorem, <a href="https://examplesite.com">link</a> <em>ipsum</em> dolor sit
+                amet consectetur adipisicing elit. Cumque praesentium nisi officiis maiores quia sapiente totam omnis
+                vel sequi corporis ipsa incidunt reprehenderit recusandae maxime perspiciatis iste placeat architecto,
+                mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo, unde cum omnis vel
+                sed temporibus. mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo,
+                unde cum
+                omnis vel sed temporibus. mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit
+                illo, unde cum omnis vel sed temporibus.</p>
+            </div>
+          </div>
+        </div>
+        <!-- faq item -->
+        <div class="col-md-12 mb-4">
+          <div class="card card-lg">
+            <div class="card-body">
+              <h3 class="card-title h5">Bài 1: Đồng phạm</h3>
+              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
+                recusandae
+                maxime perspiciatis iste placeat architecto.</p>
+            </div>
+          </div>
+        </div>
+        <!-- faq item -->
+        <!-- faq item -->
+        <div class="col-md-12 mb-4">
+          <div class="card card-lg">
+            <div class="card-body">
+              <h3 class="card-title h5">Bài 2: Tội phạm cụ thể</h3>
+              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
+                recusandae
+                maxime perspiciatis iste placeat architecto.</p>
+            </div>
+          </div>
+        </div>
+        <!-- faq item -->
+
+        <!-- <div class="col-md-6 mb-4">
+          <div class="card card-lg">
+            <div class="card-body">
+              <h3 class="card-title h5">I need something unique, Can you make it?</h3>
+              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
+                recusandae
+                maxime perspiciatis iste placeat architecto, mollitia delectus <a
+                  href="https://examplesite.com">link</a>
+                ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo, unde cum omnis vel sed temporibus,
+                repudiandae impedit nam ad enim porro, qui labore fugiat quod suscipit fuga necessitatibus. Perferendis,
+                ipsum?</p>
+            </div>
+          </div>
+        </div> -->
+        <!-- faq item -->
+        <!-- <div class="col-md-6 mb-4">
+          <div class="card card-lg">
+            <div class="card-body">
+              <h3 class="card-title h5">Is there any documentation and support?</h3>
+              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
+                recusandae
+                maxime perspiciatis iste placeat architecto, mollitia delectus <a
+                  href="https://examplesite.com">link</a>
+                ut ab quibusdam.</p>
+            </div>
+          </div>
+        </div> -->
+        <!-- faq item -->
+        <!-- <div class="col-md-6 mb-4">
+          <div class="card card-lg">
+            <div class="card-body">
+              <h3 class="card-title h5">Any refunds?</h3>
+              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
+                recusandae
+                maxime perspiciatis iste placeat architecto.</p>
+            </div>
+          </div>
+        </div> -->
+        <!-- faq item -->
+        <!-- <div class="col-md-6 mb-4">
+          <div class="card card-lg">
+            <div class="card-body">
+              <h3 class="card-title h5">What is a product key?</h3>
+              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt</p>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </section>
+  <!-- /faq -->
+
+  <!-- topics -->
+  <section class="section pb-0">
+    <div class="container">
+      <h2 class="section-title">Danh sách bài giảng</h2>
+      <div class="row">
+        <!-- topic -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+          <div class="card match-height">
+            <div class="card-body">
+              <i class="card-icon ti-folder mb-4"></i>
+              <h3 class="card-title h4">Bài 1: Đồng phạm</h3>
+              <p class="card-text">Bài đồng phạm bao gồm 8 tập tài liệu</p>
+              <a href="list.html?id=1" class="stretched-link"></a>
+            </div>
+          </div>
+        </div>
+        <!-- topic -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+          <div class="card match-height">
+            <div class="card-body">
+              <i class="card-icon ti-folder mb-4"></i>
+              <h3 class="card-title h4">Bài 2: Tội phạm cụ thể</h3>
+              <p class="card-text">Bài tội phạm cụ thể bao gồm 8 tập</p>
+              <a href="list.html?id=2" class="stretched-link"></a>
+            </div>
+          </div>
+        </div>
+        <!-- topic -->
+        <!-- <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+          <div class="card match-height">
+            <div class="card-body">
+              <i class="card-icon ti-package mb-4"></i>
+              <h3 class="card-title h4">Our Features</h3>
+              <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
+              <a href="list.html" class="stretched-link"></a>
+            </div>
+          </div>
+        </div> -->
+        <!-- topic -->
+        <!-- <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+          <div class="card match-height">
+            <div class="card-body">
+              <i class="card-icon ti-settings mb-4"></i>
+              <h3 class="card-title h4">Theme Facility</h3>
+              <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
+              <a href="list.html" class="stretched-link"></a>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </section>
+  <!-- /topics -->
+
+  <footer>
+    <div class="container">
+      <div class="row align-items-center border-bottom py-5">
+        <div class="col-lg-4">
+          <!-- <ul class="list-inline footer-menu text-center text-lg-left">
+            <!-- <li class="list-inline-item"><a href="changelog.html">Changelog</a></li> -->
+          <!-- <li class="list-inline-item"><a href="contact.html">contact</a></li> -->
+          <!-- <li class="list-inline-item"><a href="search.html">Search</a></li> -->
+          <!-- </ul> -->
+        </div>
+        <div class="col-lg-4">
+          <!-- <a class="navbar-brand" href="index.html">
+            <img class="img-fluid" src="images/logo.png" alt="Hugo documentation theme">
+          </a> -->
+          <ul class="list-inline social-icons text-lg-center text-center">
+            <li class="list-inline-item"><a href="#"><i class="ti-facebook"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="ti-twitter-alt"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="ti-github"></i></a></li>
+            <li class="list-inline-item"><a href="#"><i class="ti-linkedin"></i></a></li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+
+        </div>
+      </div>
+      <div class="py-4 text-center">
+        <small class="text-light">Copyright © 2025 </a></small>
+      </div>
+    </div>
+  </footer>
 
   <!-- plugins -->
   <script src="plugins/jQuery/jquery.min.js"></script>
@@ -235,123 +296,10 @@
   <script src="plugins/masonry/masonry.min.js"></script>
   <script src="plugins/clipboard/clipboard.min.js"></script>
   <script src="plugins/match-height/jquery.matchHeight-min.js"></script>
-  <script>
-    let countNo = 0;
-    var countYes = 0;
-    const supabaseUrl = 'https://ehtxrrxcaziwffiexzla.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVodHhycnhjYXppd2ZmaWV4emxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk3MzQwNTksImV4cCI6MjA2NTMxMDA1OX0.o-Mp1UBGUL-2xExuYmjZ-ZxyXLtc82jQw7LUWwKKlUw';
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function fetchData() {
-      const { data, error } = await supabase
-        .from('click')
-        .select('*')
-        .eq('id', 1)
-      if (error) {
-        console.error('Lỗi khi lấy dữ liệu:', error)
-      } else {
-        if (data.length != 0) {
-          console.log('show data', data[0].count);
-          countYes = data[0].count;
-        }
-      }
-    }
-    fetchData()
-    async function updateClickCount(countYes) {
-      const { data, error } = await supabase
-        .from('click')
-        .update({ count: countYes })
-        .eq('id', 1)
+  <!-- Main Script -->
+  <script src="js/script.js"></script>
 
-      if (error) {
-        console.error('Lỗi khi cập nhật:', error)
-        return
-      }
-      console.log('Cập nhật thành công:')
-    }
-
-
-    function getRandomIntBetween(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-
-      document.body.addEventListener('click', function () {
-        document.getElementById('audioPlayer').play();
-      }, { once: true }); // Chỉ cần click 1 lần
-      const btnNo = document.getElementById('btn-No');
-      const btnYes = document.getElementById('btn-Yes');
-      function moveButton() {
-        const x = getRandomIntBetween(-150, 50);
-        const y = getRandomIntBetween(-200, 100);
-        btnNo.style.transform = `translate(${x}px, ${y}px)`;
-      }
-      btnNo.addEventListener('click', function () {
-        countNo++;
-        if (countNo >= 2) {
-          document.getElementById('imgGif').src = "assets/angry.gif"
-          document.getElementById('title').innerText = `Người đâu bướng thiệt chứ ${String.fromCodePoint(0x1F620)}${String.fromCodePoint(0x1F620)}${String.fromCodePoint(0x1F620)}`
-        } else {
-          document.getElementById('imgGif').src = "assets/sorry.gif"
-          document.getElementById('title').innerText = `Cho tui xin lỗi đi mà sau không gọi là người lạ nữa ${String.fromCodePoint(0x1F625)}${String.fromCodePoint(0x1F625)}${String.fromCodePoint(0x1F625)}`
-        }
-        moveButton();
-      });
-      btnYes.addEventListener('click', function () {
-        if (countNo != 0) {
-          document.getElementById('imgGif').src = "assets/hello.gif"
-          document.getElementById('title').innerText = `Vậy cho mình làm quen nhá ?`
-          btnNo.style.transform = `translate(0, 0)`;
-          countNo = 0;
-        } else {
-          document.getElementById('heart').style.display = 'block';
-          countYes++;
-          document.getElementById('button').style.display = 'none';
-
-
-          document.getElementById('title').innerText = `Tuyệt vời ${String.fromCodePoint(0x1F60d)}`;
-          setTimeout(() => {
-            document.getElementById('heart').style.display = 'none';
-            document.getElementById('imgGif').src = "assets/yes.gif"
-            setTimeout(() => {
-              document.getElementById('bg').style.display = "none"
-              document.getElementById('bg_heart').style.display = `flex`;
-            }, 2000)
-          }, 3000)
-          updateClickCount(countYes)
-          console.log("countYes", countYes);
-        }
-      });
-    });
-    $("#header-plugin").load("https://vivinantony.github.io/header-plugin/", function () {
-      $("a.back-to-link").attr("href", "http://blog.thelittletechie.com/2015/03/love-heart-animation-using-css3.html#tlt")
-    });
-
-    var love = setInterval(function () {
-      var r_num = Math.floor(Math.random() * 40) + 1;
-      var r_size = Math.floor(Math.random() * 65) + 10;
-      var r_left = Math.floor(Math.random() * 100) + 1;
-      var r_bg = Math.floor(Math.random() * 25) + 100;
-      var r_time = Math.floor(Math.random() * 5) + 5;
-
-      $('.bg_heart2').append("<div class='heart2' style='width:" + r_size + "px;height:" + r_size + "px;left:" + r_left + "%;background:rgba(255," + (r_bg - 25) + "," + r_bg + ",1);-webkit-animation:love " + r_time + "s ease;-moz-animation:love " + r_time + "s ease;-ms-animation:love " + r_time + "s ease;animation:love " + r_time + "s ease'></div>");
-
-      $('.bg_heart2').append("<div class='heart2' style='width:" + (r_size - 10) + "px;height:" + (r_size - 10) + "px;left:" + (r_left + r_num) + "%;background:rgba(255," + (r_bg - 25) + "," + (r_bg + 25) + ",1);-webkit-animation:love " + (r_time + 5) + "s ease;-moz-animation:love " + (r_time + 5) + "s ease;-ms-animation:love " + (r_time + 5) + "s ease;animation:love " + (r_time + 5) + "s ease'></div>");
-
-      $('.heart2').each(function () {
-        var top = $(this).css("top").replace(/[^-\d\.]/g, '');
-        var width = $(this).css("width").replace(/[^-\d\.]/g, '');
-        if (top <= -100 || width >= 150) {
-          $(this).detach();
-        }
-      });
-    }, 500);
-  </script>
-  <script>
-
-  </script>
 </body>
 
 </html>
