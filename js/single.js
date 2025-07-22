@@ -2,8 +2,6 @@
 	const urlParams = new URLSearchParams(window.location.search);
 	const document_id = urlParams.get('document_id');
 	const folder_id = urlParams.get('folder_id');
-	console.log('document_id', document_id);
-	console.log('folder_id', folder_id);
     const supabaseUrl = 'https://ehtxrrxcaziwffiexzla.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVodHhycnhjYXppd2ZmaWV4emxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk3MzQwNTksImV4cCI6MjA2NTMxMDA1OX0.o-Mp1UBGUL-2xExuYmjZ-ZxyXLtc82jQw7LUWwKKlUw';
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -53,11 +51,11 @@
         return data || [];
     }
 
-    async function fetchDataFileByFolder(id) {
+    async function fetchDataFileByFolder(folder_id, document_id) {
         const { data, error } = await supabase
             .from('file')
             .select('*')
-            .eq('parent', id);
+            .eq('parent', folder_id).eq('document_id', document_id);
         if (error) {
             console.error('Lỗi khi lấy dữ liệu folder:', error);
             return [];
@@ -69,11 +67,10 @@
                 li.title = `${name}`;
                 li.className = className;
                 li.innerHTML = `
-                        <a href="list.html?document_id=${doc.id}">${doc.name}</a>
                         ${show ? `<ul>
                             ${data.map(folder => folder.parent == doc.id ? `
-                                <li class="sidelist ${folderId == folder.id ? "sidelist parent active" : "" }">
-                                    <a href="single.html?document_id=${doc.id}&&folder_id=${folder.id}">${folder.name}</a>
+                                <li class="sidelist ${folderId == folder.chapterNumber ? "sidelist parent active" : "" }">
+                                    <a href="single.html?document_id=${doc.id}&&folder_id=${folder.chapterNumber}">${folder.name}</a>
                                 </li>
                             `: '').join('')}
                         </ul>` : ''}
@@ -90,28 +87,20 @@
         const body = document.querySelector('.body-description')
         const div = document.createElement('div');
               div.innerHTML = `
-                <h2 class="mb-4 font-weight-medium">${documentData.name}</h2>
+                <h3 id="heading-example" style="font-weight:500">${folderData.name}. ${documentData.name}</h3>
                 <div class="content">
-                    <!-- heading -->
-                    <h4 id="heading-example">${folderData.name}</h4>
-                    <p>${folderData.desc}</p>
+                    <p>${folderData.desc != null ? folderData.desc: '' }</p>
                     <hr>
-                    <!-- emphasis -->
-                    <h5 id="link">Link</h5>
-                    <div class="body-link">
-                        ${fileData.map(file => `<h6><a href="https://drive.google.com/file/d/1VyvzIgyWSq-bG6gyP1CR-9OQ994Q94Wx/preview">${file.name}</a></h6>
-                                <embed src="https://drive.google.com/file/d/1VyvzIgyWSq-bG6gyP1CR-9OQ994Q94Wx/preview"
-                                width="100%" height="600px" type="application/pdf">
-                                <br/>`).join('')}
-                    </div>
-                    <hr>
-                    <!-- youtube video -->
-                    <h5 id="youtube-video">Youtube video</h5>
-                    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-                        <iframe src="https://www.youtube.com/embed/CdRyfr7WAGs"
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen
-                        title="YouTube Video"></iframe>
-                    </div>
+                    ${fileData.length != 0 ? 
+                        `<div class="body-link">
+                            ${fileData.map((file,index) => `
+                            <h6 style="${file.parent_file != null ? 
+                                 `margin-left: ${file.parent_file.split(".").length * 20}px`: ``}" id="link">${file.chapterNumber}. ${file.name} ${file.numberChildFiles != null ? 
+                                 ``: `<a href="${file.link}" style="font-size: 14px">xem</a>
+                            `}</h6>
+                                 `).join('')}
+                        </div>
+                    <hr>` : "" }
                 </div> `;
                 
         if ($(body).data('owl.body-description')) {
@@ -127,17 +116,14 @@
                 fetchDataDocument(),
                 fetchDataFolder(),
                 fetchDataDocumentById(document_id),
-                fetchDataFileByFolder(folder_id),
+                fetchDataFileByFolder(folder_id,document_id),
                 fetchDataFolderById(folder_id),
             ]);
             const carousel = document.querySelector('.sidenav')
             documentData.forEach(doc => {
                 if(doc.id == document_id){
                     setElementDocument(carousel, doc, "sidelist parent", folderData, true, folder_id);
-                }else{
-                    setElementDocument(carousel, doc, "", folderData, false);
                 }
-              
             });
             setElementBody(folderDataDetail[0], folderDataDetailById[0], fileDataByFolder);
         } catch (error) {
@@ -145,51 +131,3 @@
         }
     });
 }();
-
-{/* <ul class="sidenav">
-    <li title="Basic Startup" class="sidelist parent">
-        <a href="list.html">Basic Startup</a>
-            <ul>
-            <li class="sidelist parent active">
-              <a href="single.html">Elements</a>
-            <li class="sidelist">
-              <a href="single.html">Installation</a>
-            <li class="sidelist">
-              <a href="single.html">Configuration</a>
-            <li class="sidelist">
-              <a href="single.html">Customization</a>
-            <li class="sidelist">
-              <a href="single.html">Requerments</a>
-            </li>
-        </ul>
-        </li>
-</ul> */}
-
-//  <h2 class="mb-4 font-weight-medium">Bài 2</h2>
-//             <div class="content">
-
-//               <!-- heading -->
-//               <h4 id="heading-example">Tập 1</h4>
-//               <p>Here is example of hedings. You can use this heading by following markdownify rules. For example: use
-//               </p>
-//               <hr>
-//               <!-- emphasis -->
-//               <h5 id="link">Link</h5>
-//               <div class="body-link">
-//                 <p><a href="https://www.google.com">I&rsquo;m an inline-style link</a></p>
-//                 <embed src="https://drive.google.com/file/d/1VyvzIgyWSq-bG6gyP1CR-9OQ994Q94Wx/view?usp=sharing"
-//                   width="100%" height="600px" type="application/pdf">
-//                 <iframe src="https://drive.google.com/file/d/1VyvzIgyWSq-bG6gyP1CR-9OQ994Q94Wx/view?usp=sharing"
-//                   width="100%" height="600px" allow="autoplay">
-//                 </iframe>
-//               </div>
-//               <hr>
-
-//               <!-- youtube video -->
-//               <h5 id="youtube-video">Youtube video</h5>
-//               <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-//                 <iframe src="https://www.youtube.com/embed/C0DPdy98e4c"
-//                   style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen
-//                   title="YouTube Video"></iframe>
-//               </div>
-//             </div>

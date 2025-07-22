@@ -29,36 +29,44 @@
   <!--Favicon-->
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
   <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 
 <body>
-
-  <header class="sticky-top navigation">
-    <div class=container>
-      <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
-        <!-- <a class=navbar-brand href="index.html"><img class="img-fluid" src="images/logo.png" alt="godocs"></a> -->
-        <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
-          <i class="ti-align-right h4 text-dark"></i></button>
-        <div class="collapse navbar-collapse text-center" id=navigation>
-          <ul class="navbar-nav mx-auto align-items-center">
-            <li class="nav-item"><a class="nav-link" href="index.html">Trang chủ</a></li>
-            <li class="nav-item"><a class="nav-link" href="list.html?document_id=1">Danh sách bài giảng</a></li>
-            <li class="nav-item"><a class="nav-link" href="search.html">Tìm kiếm bài giảng</a></li>
-          </ul>
-          <!-- <a href="changelog.html" class="btn btn-sm btn-outline-primary ml-lg-4">changelog</a>
-          <a href="contact.html" class="btn btn-sm btn-primary ml-lg-4">contact</a> -->
+  <div class="bg-image">
+    <div style="padding: 0px 20px 0px 0px; margin: 0px; background-color: #ffffff;">
+      <div class="container row" style="justify-content: center; align-items: center;">
+        <div class="col-4" style="padding-left: 50px;">
+          <img src="images/banner.png" alt="illustration" class="img-fluid" style="max-width: 80%;">
         </div>
-      </nav>
+        <div class="col-8 text-center">
+          <h2 class="mb-4">Hồ sơ bài giảng điện tử</h2>
+          <h4 class="mb-3">Giảng viên: NGUYỄN THỊ THANH THỦY</h4>
+          <h5 class="mb-3"> Khoa luật - T06</h5>
+        </div>
+      </div>
     </div>
-  </header>
+    <header class="sticky-top navigation" style="background-color: #ffffff;">
+      <div class=container>
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+          <!-- <a class=navbar-brand href="index.html"><img class="img-fluid" src="images/logo.png" alt="godocs"></a> -->
+          <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+            <i class="ti-align-right h4 text-dark"></i></button>
+          <div class="collapse navbar-collapse text-center" id=navigation>
+            <ul class="navbar-nav mx-auto align-items-center"></ul>
+            <!-- <a href="changelog.html" class="btn btn-sm btn-outline-primary ml-lg-4">changelog</a>
+          <a href="contact.html" class="btn btn-sm btn-primary ml-lg-4">contact</a> -->
+          </div>
+        </nav>
+      </div>
+    </header>
 
-  <!-- banner -->
-  <section class="section pb-0">
+    <!-- banner -->
+    <!-- <section class="section pb-0"> -->
     <!-- <video autoplay muted loop id="bg-video">
       <source src="images/course-video.mp4" type="video/mp4" />
     </video> -->
-    <div class="container">
+    <!-- <div class="container">
       <div class="row justify-content-between align-items-center">
         <div class="col-lg-7 text-center text-lg-left">
           <h1 class="mb-4">Hồ sơ bài giảng điện tử</h1>
@@ -74,166 +82,119 @@
         </div>
       </div>
     </div>
-  </section>
-  <!-- /banner -->
+  </section> -->
+    <!-- /banner -->
 
-  <!-- call to action -->
-  <section class="section">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-4 text-center d-lg-block d-none">
-          <img src="images/avatar.png" class="img-fluid" alt="">
-        </div>
-        <div class="col-lg-8 text-lg-left text-center">
-          <h3 class="mb-3">Thông tin giáo viên</h3>
-          <p>
-            <b>Họ tên giáo viên: </b>NGUYỄN THỊ THANH THỦY<br>
-            <b>cấp bậc: </b>NGUYỄN THỊ THANH THỦY<br>
-            <b>Chức danh: </b> Giảng viên<br>
-            <b>Thời gian giảng dạy: </b> dolor sit amet consectetur adipisicing elit<br>
-            <b>Thành tích: </b>dolor sit amet consectetur adipisicing elit dolor sit amet consectetur adipisicing elit
-            dolor sit amet consectetur adipisicing elit<br>
-          </p>
-          <!-- <a href="contact.html" class="btn btn-primary">Submit a ticket</a> -->
+    <!-- call to action -->
+
+    <section class="section pb-0">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-5 text-center d-lg-block d-none">
+            <img src="images/avatar.png" class="img-fluid" alt="">
+          </div>
+          <div class="col-lg-7 text-lg-left text-center card-item" style="color: #ffffff; padding-left: 80px;">
+            <h3 class="mb-3" style="color: #ffffff;">Thông tin giáo viên</h3>
+            <p style="color: #ffffff;">
+              <b>Họ tên giáo viên: </b>NGUYỄN THỊ THANH THỦY<br>
+              <b>cấp bậc: </b>Thiếu tá<br>
+              <b>Chức danh: </b> Giảng viên chính thức<br>
+              <b>Thời gian giảng dạy: </b> Từ năm 2012 đến nay<br>
+              <b>Thành tích: </b>
+            <ul>
+              <li>04 bài giảng dạy giỏi cấp trường</li>
+              <li>02 lần đạt danh hiệu giáo viên dạy giỏi cấp trường</li>
+            </ul>
+            <br>
+            </p>
+            <!-- <a href="contact.html" class="btn btn-primary">Submit a ticket</a> -->
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-  <!-- /call to action -->
+    </section>
+    <!-- /call to action -->
 
-  <!-- faq -->
-  <section class="section pb-0">
-    <div class="container">
-      <h2 class="section-title">Giới thiệu hồ sơ</h2>
-      <div class="row masonry-wrapper">
-        <!-- faq item -->
-        <div class="col-md-12 mb-4">
-          <div class="card card-lg">
-            <div class="card-body">
-              <h3 class="card-title h5">Giới thiệu chung</h3>
-              <p class="card-text content">Lorem, <a href="https://examplesite.com">link</a> <em>ipsum</em> dolor sit
-                amet consectetur adipisicing elit. Cumque praesentium nisi officiis maiores quia sapiente totam omnis
-                vel sequi corporis ipsa incidunt reprehenderit recusandae maxime perspiciatis iste placeat architecto,
-                mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo, unde cum omnis vel
-                sed temporibus. mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo,
-                unde cum
-                omnis vel sed temporibus. mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit
-                illo, unde cum omnis vel sed temporibus.</p>
+    <!-- faq -->
+    <section class="section pb-0" style="padding-top: 30px;">
+      <div class="container">
+        <h2 class="section-title" style="color: #f5a425">Giới thiệu hồ sơ</h2>
+        <div class="row masonry-wrapper">
+          <div class="col-md-12 mb-4">
+            <div class="card card-lg">
+              <div class="card-body">
+                <h3 class="card-title h5" style="color: #f5a425">Giới thiệu chung</h3>
+                <p class="card-text content">Lorem, <a href="https://examplesite.com">link</a> <em>ipsum</em> dolor sit
+                  amet consectetur adipisicing elit. Cumque praesentium nisi officiis maiores quia sapiente totam omnis
+                  vel sequi corporis ipsa incidunt reprehenderit recusandae maxime perspiciatis iste placeat architecto,
+                  mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo, unde cum omnis
+                  vel
+                  sed temporibus. mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo,
+                  unde cum
+                  omnis vel sed temporibus. mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore
+                  reprehenderit
+                  illo, unde cum omnis vel sed temporibus.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mb-4">
+            <div class="card card-lg">
+              <div class="card-body">
+                <h3 class="card-title h5" style="color: #f5a425">Bài 1: Đồng phạm</h3>
+                <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque
+                  praesentium
+                  nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
+                  recusandae
+                  maxime perspiciatis iste placeat architecto.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mb-4">
+            <div class="card card-lg">
+              <div class="card-body">
+                <h3 class="card-title h5" style="color: #f5a425">Bài 2: Tội phạm cụ thể</h3>
+                <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque
+                  praesentium
+                  nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
+                  recusandae
+                  maxime perspiciatis iste placeat architecto.</p>
+              </div>
             </div>
           </div>
         </div>
-        <!-- faq item -->
-        <div class="col-md-12 mb-4">
-          <div class="card card-lg">
-            <div class="card-body">
-              <h3 class="card-title h5">Bài 1: Đồng phạm</h3>
-              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
-                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
-                recusandae
-                maxime perspiciatis iste placeat architecto.</p>
-            </div>
-          </div>
-        </div>
-        <!-- faq item -->
-        <!-- faq item -->
-        <div class="col-md-12 mb-4">
-          <div class="card card-lg">
-            <div class="card-body">
-              <h3 class="card-title h5">Bài 2: Tội phạm cụ thể</h3>
-              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
-                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
-                recusandae
-                maxime perspiciatis iste placeat architecto.</p>
-            </div>
-          </div>
-        </div>
-        <!-- faq item -->
-
-        <!-- <div class="col-md-6 mb-4">
-          <div class="card card-lg">
-            <div class="card-body">
-              <h3 class="card-title h5">I need something unique, Can you make it?</h3>
-              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
-                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
-                recusandae
-                maxime perspiciatis iste placeat architecto, mollitia delectus <a
-                  href="https://examplesite.com">link</a>
-                ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo, unde cum omnis vel sed temporibus,
-                repudiandae impedit nam ad enim porro, qui labore fugiat quod suscipit fuga necessitatibus. Perferendis,
-                ipsum?</p>
-            </div>
-          </div>
-        </div> -->
-        <!-- faq item -->
-        <!-- <div class="col-md-6 mb-4">
-          <div class="card card-lg">
-            <div class="card-body">
-              <h3 class="card-title h5">Is there any documentation and support?</h3>
-              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
-                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
-                recusandae
-                maxime perspiciatis iste placeat architecto, mollitia delectus <a
-                  href="https://examplesite.com">link</a>
-                ut ab quibusdam.</p>
-            </div>
-          </div>
-        </div> -->
-        <!-- faq item -->
-        <!-- <div class="col-md-6 mb-4">
-          <div class="card card-lg">
-            <div class="card-body">
-              <h3 class="card-title h5">Any refunds?</h3>
-              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
-                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
-                recusandae
-                maxime perspiciatis iste placeat architecto.</p>
-            </div>
-          </div>
-        </div> -->
-        <!-- faq item -->
-        <!-- <div class="col-md-6 mb-4">
-          <div class="card card-lg">
-            <div class="card-body">
-              <h3 class="card-title h5">What is a product key?</h3>
-              <p class="card-text content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
-                nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt</p>
-            </div>
-          </div>
-        </div> -->
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
   <!-- /faq -->
 
   <!-- topics -->
-  <section class="section pb-0">
+  <!-- <section class="section pb-0">
     <div class="container">
       <h2 class="section-title">Danh sách bài giảng</h2>
-      <div class="row">
-        <!-- topic -->
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+      <div class="row"> -->
+  <!-- topic -->
+  <!-- <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
           <div class="card match-height">
             <div class="card-body">
               <i class="card-icon ti-folder mb-4"></i>
               <h3 class="card-title h4">Bài 1: Đồng phạm</h3>
               <p class="card-text">Bài đồng phạm bao gồm 8 tập tài liệu</p>
-              <a href="list.html?document_id=1" class="stretched-link"></a>
+              <a href="list.html?id=1" class="stretched-link"></a>
             </div>
           </div>
-        </div>
-        <!-- topic -->
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        </div> -->
+  <!-- topic -->
+  <!-- <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
           <div class="card match-height">
             <div class="card-body">
               <i class="card-icon ti-folder mb-4"></i>
               <h3 class="card-title h4">Bài 2: Tội phạm cụ thể</h3>
               <p class="card-text">Bài tội phạm cụ thể bao gồm 8 tập</p>
-              <a href="list.html?document_id=2" class="stretched-link"></a>
+              <a href="list.html?id=2" class="stretched-link"></a>
             </div>
           </div>
-        </div>
-        <!-- topic -->
-        <!-- <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        </div> -->
+  <!-- topic -->
+  <!-- <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
           <div class="card match-height">
             <div class="card-body">
               <i class="card-icon ti-package mb-4"></i>
@@ -243,8 +204,8 @@
             </div>
           </div>
         </div> -->
-        <!-- topic -->
-        <!-- <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+  <!-- topic -->
+  <!-- <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
           <div class="card match-height">
             <div class="card-body">
               <i class="card-icon ti-settings mb-4"></i>
@@ -254,9 +215,9 @@
             </div>
           </div>
         </div> -->
-      </div>
+  <!-- </div>
     </div>
-  </section>
+  </section> -->
   <!-- /topics -->
 
   <footer>
@@ -299,6 +260,7 @@
 
   <!-- Main Script -->
   <script src="js/script.js"></script>
+  <script src="js/nav.js"></script>
 
 </body>
 

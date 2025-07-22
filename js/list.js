@@ -1,7 +1,6 @@
 !function () {
 	const urlParams = new URLSearchParams(window.location.search);
 	const id = urlParams.get('document_id');
-	console.log(id);
     const supabaseUrl = 'https://ehtxrrxcaziwffiexzla.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVodHhycnhjYXppd2ZmaWV4emxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk3MzQwNTksImV4cCI6MjA2NTMxMDA1OX0.o-Mp1UBGUL-2xExuYmjZ-ZxyXLtc82jQw7LUWwKKlUw';
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -44,11 +43,10 @@
                 li.title = `${name}`;
                 li.className = className;
                 li.innerHTML = `
-                        <a href="list.html?document_id=${doc.id}">${doc.name}</a>
                         ${show ? `<ul>
                             ${data.map(folder => folder.parent == doc.id ? `
                                 <li class="sidelist">
-                                    <a href="single.html?document_id=${doc.id}&&folder_id=${folder.id}">${folder.name}</a>
+                                    <a href="single.html?document_id=${doc.id}&&folder_id=${folder.chapterNumber}">${folder.name}</a>
                                 </li>
                             `: '').join('')}
                         </ul>` : ''}
@@ -65,9 +63,10 @@
         const body = document.querySelector('.body-description')
         const div = document.createElement('div');
               div.innerHTML = `
-                    <h2 class="mb-4 font-weight-medium">${data.name}</h2>
+                    <h3 class="mb-4 font-weight-medium text-center">${data.chapterNumber}</h3>
+                    <h4 class="mb-4 font-weight-medium text-center">${data.name}</h4>
                     <div class="content">
-                    <p>${data.desc}</p>
+                    <p>${data.desc != null ? data.desc : "" }</p>
                     `;
                 
         if ($(body).data('owl.body-description')) {
@@ -90,10 +89,7 @@
             documentData.forEach(doc => {
                 if(doc.id == id){
                     setElementDocument(carousel, doc, "sidelist parent active", folderData, true);
-                }else{
-                    setElementDocument(carousel, doc, "", folderData, false);
                 }
-              
             });
             setElementBody(folderDataDetail[0]);
         } catch (error) {
