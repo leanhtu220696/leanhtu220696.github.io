@@ -18,7 +18,7 @@ VERSION:	Versoin Number
 @import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800&display=swap");
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Arial", "Helvetica", sans-serif;
   -webkit-font-smoothing: antialiased;
   font-size: 16px;
   line-height: 1.6;
@@ -47,7 +47,7 @@ p,
   color: #333;
   font-size: 16px;
   line-height: 26px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Arial", "Helvetica", sans-serif;
 }
 
 h1,
@@ -57,7 +57,7 @@ h4,
 h5,
 h6 {
   color: #222;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Arial", "Helvetica", sans-serif;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -123,11 +123,12 @@ h6,
 /* Button style */
 .btn {
   font-size: 16px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Arial", "Helvetica", sans-serif;
   text-transform: capitalize;
-  padding: 13px 30px;
+  padding: 5px 30px;
+  margin-top: 15px;
   border-radius: 6px;
-  border: 1px solid;
+  border: 2px solid #bababa;
   position: relative;
   z-index: 1;
   transition: 0.2s ease;
@@ -147,9 +148,9 @@ h6,
 }
 
 .btn-primary {
-  background: #FF0043;
+  background: #263c2f;
   color: #fff;
-  border-color: #FF0043;
+  border-color: #263c2f;
 }
 
 .btn-primary:active,
@@ -178,7 +179,7 @@ h6,
 }
 
 body {
-  background-color: #fff;
+  background-color: #5a987f;
   overflow-x: hidden;
 }
 
@@ -489,7 +490,10 @@ a:hover {
 }
 
 .card-body {
-  padding: 25px;
+  background-color: #fff;
+  padding: 25px 10px;
+  margin: 20px 30px;
+  border-radius: 20px;
 }
 
 .card:hover {
@@ -920,7 +924,7 @@ pre .copy-to-clipboard {
   position: absolute;
   top: 2px;
   color: #fff;
-  font-family: "themify";
+  font-family: "Arial", "Helvetica", sans-serif;
   font-weight: 900;
   content: "\e717";
   left: 10px;

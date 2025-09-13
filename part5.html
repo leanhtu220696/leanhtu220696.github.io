@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <title>Bài giảng điện tử</title>
+
+    <!-- mobile responsive meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- theme meta -->
+    <meta name="theme-name" content="godocs" />
+
+    <!-- ** Plugins Needed for the Project ** -->
+    <!-- plugins -->
+    <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="plugins/themify-icons/themify-icons.css">
+    <!-- Main Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .progress-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .progress-circle {
+            transform: rotate(-90deg);
+        }
+
+        circle {
+            fill: none;
+            stroke-width: 10;
+        }
+
+        .bg {
+            stroke: #ddd;
+        }
+
+        .progress {
+            stroke: #1b3b2e;
+            /* xanh đậm gần giống hình */
+            stroke-linecap: round;
+            stroke-dasharray: 314;
+            /* chu vi với r=50 ~ 2π*50 */
+            stroke-dashoffset: 314;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .score {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        form {
+            max-width: 500px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+            font-family: "Times New Roman", serif;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+        <div class="card-body col-md-12 col-sm-12 justify-content-md-center">
+            <div class="col-md-12 col-sm-10" style="display: flex; justify-content: center;">
+                <div class="progress-container">
+                    <svg class="progress-circle" width="120" height="120">
+                        <circle class="bg" cx="60" cy="60" r="50" />
+                        <circle class="progress" cx="60" cy="60" r="50" />
+                    </svg>
+                    <div class="score" id="score">0/10</div>
+                </div>
+            </div>
+            <div class="count-question">
+            </div>
+            <div class="des-question">
+            </div>
+            <div class="answers">
+            </div>
+            <div id="result"></div>
+        </div>
+    </div>
+    </div>
+
+    <!-- plugins -->
+    <script src="plugins/jQuery/jquery.min.js"></script>
+    <script src="plugins/bootstrap/bootstrap.min.js"></script>
+    <script src="plugins/masonry/masonry.min.js"></script>
+    <script src="plugins/clipboard/clipboard.min.js"></script>
+    <script src="plugins/match-height/jquery.matchHeight-min.js"></script>
+
+    <!-- Main Script -->
+    <script src="js/script.js"></script>
+    <script src="js/part5.js"></script>
+</body>
+
+</html>
