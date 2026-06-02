@@ -25,8 +25,8 @@
         /* Giao diện hiển thị cặp đôi (Match Interface) */
         #couple-interface {
             transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            background: rgba(10, 2, 18, 0.6);
-            backdrop-filter: blur(8px);
+            background: rgba(10, 2, 18, 0.65);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 20, 147, 0.15);
         }
 
@@ -55,10 +55,25 @@
         }
 
         .glass-panel {
-            background: rgba(12, 3, 20, 0.75);
+            background: rgba(12, 3, 20, 0.8);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 20, 147, 0.25);
-            border-radius: 16px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        /* Nút trong bảng chọn có hiệu ứng hover mượt mà */
+        .btn-hint {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        .btn-hint:hover {
+            background: rgba(255, 20, 147, 0.15);
+            border-color: rgba(255, 20, 147, 0.3);
+            color: #ff1493 !important;
+            opacity: 1 !important;
         }
 
         @media (max-width: 767px) and (orientation: portrait) {
@@ -87,36 +102,44 @@
             
             <div class="flex items-center justify-center gap-4 md:gap-8 mb-8 relative">
                 <div class="avatar-container">
-                    <img src="URL_ANH_CUA_BAN" alt="Bạn" class="w-full h-full object-cover">
+                    <img src="anh_toi.jpg" alt="Bạn" class="w-full h-full object-cover">
                 </div>
                 
                 <div class="heart-center z-10">❤️</div>
                 
                 <div class="avatar-container">
-                    <img src="URL_ANH_CO_AY" alt="Chinh" class="w-full h-full object-cover">
+                    <img src="co_ay.jpg" alt="Chinh" class="w-full h-full object-cover">
                 </div>
             </div>
-
-            <h2 id="special-text" class="text-pink-500 text-xl md:text-2xl font-bold tracking-wide text-center drop-shadow-[0_0_10px_rgba(255,20,147,0.8)]">
-                💝 TRÁI TIM DÀNH CHO CHINH 💝
-            </h2>
         </div>
     </div>
 
-    <div class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 p-6 flex flex-col justify-between hidden md:block">
-        <div class="glass-panel p-4 w-72 pointer-events-auto">
+    <div class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 p-6 flex flex-col justify-between">
+        <div class="glass-panel p-5 w-80 pointer-events-auto">
             <h1 class="text-pink-500 text-xl font-bold mb-1 tracking-wider">COUPLE CORE v12.0</h1>
             <div class="flex items-center gap-2 bg-black/40 rounded-full px-3 py-1 w-fit border border-pink-500/10 mb-4">
                 <div id="status-dot" class="w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
                 <span id="status-text" class="text-[10px] text-gray-300 font-mono uppercase tracking-wider">Đang chờ bàn tay...</span>
             </div>
             
-            <div class="text-[12px] text-pink-200/70 font-mono space-y-2 border-t border-pink-500/10 pt-3">
-                <div class="p-1 opacity-60">❤️ <b>Nắm tay:</b> Trái tim hạt cơ bản</div>
-                <div class="p-1 opacity-60">👍 <b>Giơ ngón cái:</b> Hiện khung ảnh đôi + Trái tim</div>
-                <div class="p-1 opacity-60">👋 <b>Xòe 5 ngón:</b> Siêu bùng nổ vũ trụ</div>
-                <div class="p-1 opacity-60">🫰 <b>Bắn tim (2 ngón):</b> Hiện mật mã chữ</div>
+            <div class="text-[13px] text-pink-200/70 font-mono space-y-2 border-t border-pink-500/10 pt-3">
+                <button id="hint-heart" class="btn-hint w-full text-left p-2 rounded-lg flex items-center gap-2 text-white opacity-50">
+                    <span>❤️</span> <span><b>Nắm tay:</b> Trái tim hạt cơ bản</span>
+                </button>
+                <button id="hint-thumb" class="btn-hint w-full text-left p-2 rounded-lg flex items-center gap-2 text-white opacity-50">
+                    <span>👍</span> <span><b>Giơ ngón cái:</b> Hiện khung ảnh đôi + Trái tim</span>
+                </button>
+                <button id="hint-burst" class="btn-hint w-full text-left p-2 rounded-lg flex items-center gap-2 text-white opacity-50">
+                    <span>👋</span> <span><b>Xòe 5 ngón:</b> Siêu bùng nổ vũ trụ</span>
+                </button>
+                <button id="hint-text" class="btn-hint w-full text-left p-2 rounded-lg flex items-center gap-2 text-white opacity-50">
+                    <span>🫰</span> <span><b>Bắn tim (2 ngón):</b> Hiện mật mã chữ</span>
+                </button>
             </div>
+            
+            <button id="btn-reset-auto" class="hidden mt-4 w-full py-1.5 rounded-md bg-pink-600/30 border border-pink-500/50 text-[11px] text-pink-400 font-mono uppercase tracking-widest hover:bg-pink-600/50 transition-all pointer-events-auto">
+                🔄 Trở về tự động (Camera)
+            </button>
         </div>
     </div>
 
@@ -142,6 +165,7 @@
         let particles = null;
         let video, hands;
         
+        let isManualMode = false; // Flag xác định xem đang click thủ công hay dùng camera
         let currentMode = "heart"; 
         let activeTween = null;
 
@@ -183,9 +207,10 @@
 
             precalculateShapes();
             createParticleSystem();
+            setupMenuEvents(); // Kích hoạt sự kiện bấm chọn trên bảng điều khiển công cụ
 
             await initCamera().catch(() => {
-                if(document.getElementById('status-text')) document.getElementById('status-text').innerText = "CAMERA BYPASS";
+                if(document.getElementById('status-text')) document.getElementById('status-text').innerText = "CAMERA BYPASS / CLICK MODE";
             });
             
             initHandDetector();
@@ -193,6 +218,9 @@
             
             document.getElementById('loader-overlay').style.opacity = '0';
             setTimeout(() => { if(document.getElementById('loader-overlay')) document.getElementById('loader-overlay').remove(); }, 700);
+
+            // Khởi tạo trạng thái sáng mặc định ban đầu cho bảng chọn
+            highlightHint(document.getElementById('hint-heart'));
 
             animate();
         }
@@ -246,10 +274,10 @@
                 heartPositions[i*3+1]   = (hy1 * scale1 - 1.0) * rFactor1;
                 heartPositions[i*3+2]   = (Math.random() - 0.5) * 2.0;
 
-                // 2. Trái tim rực rỡ mở rộng khi giơ ngón cái (Tạo vòng hào quang bao quanh khung ảnh)
+                // 2. Trái tim rực rỡ mở rộng vòng ngoài
                 let hx2 = 16 * Math.pow(Math.sin(t), 3);
                 let hy2 = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
-                const scale2 = 1.1; // Phóng to hơn một chút để không che khuất ảnh ở tâm
+                const scale2 = 1.15; 
                 const edgeFactor = 0.9 + Math.random() * 0.1; 
                 heartThumbPositions[i*3]   = (hx2 * scale2) * edgeFactor;
                 heartThumbPositions[i*3+1] = (hy2 * scale2 - 1.0) * edgeFactor;
@@ -294,19 +322,21 @@
             scene.add(particles);
         }
 
-        // Hàm điều khiển ẩn hiện Giao diện ảnh cặp đôi
         function toggleCoupleInterface(show) {
             const ui = document.getElementById('couple-interface');
             if(!ui) return;
             if(show) {
                 ui.style.opacity = "1";
                 ui.style.transform = "scale(1)";
+                ui.style.pointerEvents = "auto";
             } else {
                 ui.style.opacity = "0";
                 ui.style.transform = "scale(0.9)";
+                ui.style.pointerEvents = "none";
             }
         }
 
+        // Logic chuyển dịch mượt mà giữa các hình thể
         function morph(targetPositionsArray, durationTime = 2.0) {
             if (activeTween) activeTween.kill();
             const posAttribute = particles.geometry.attributes.position;
@@ -339,8 +369,64 @@
             } catch(e) { console.log("MediaPipe Error"); }
         }
 
+        // --- SỰ KIỆN CLICK HOẶC CHẠM POPUP GIAO DIỆN CHỌN TÍNH NĂNG ---
+        function setupMenuEvents() {
+            const hHeart = document.getElementById('hint-heart');
+            const hThumb = document.getElementById('hint-thumb');
+            const hBurst = document.getElementById('hint-burst');
+            const hText = document.getElementById('hint-text');
+            const btnReset = document.getElementById('btn-reset-auto');
+
+            const activateManualMode = (modeName, targetPositions, showInterface, activeElement) => {
+                isManualMode = true;
+                currentMode = modeName;
+                if(btnReset) btnReset.classList.remove('hidden'); // Hiện nút quay về chế độ camera tự động
+                
+                const statusText = document.getElementById('status-text');
+                if(statusText) statusText.innerText = "CHẾ ĐỘ THỦ CÔNG (ĐÃ KHÓA)";
+
+                toggleCoupleInterface(showInterface);
+                highlightHint(activeElement);
+                morph(targetPositions, 1.8);
+            };
+
+            if(hHeart) hHeart.addEventListener('click', () => activateManualMode("heart", heartPositions, false, hHeart));
+            if(hThumb) hThumb.addEventListener('click', () => activateManualMode("thumb", heartThumbPositions, true, hThumb));
+            if(hBurst) hBurst.addEventListener('click', () => activateManualMode("burst", explosionPositions, false, hBurst));
+            if(hText) hText.addEventListener('click', () => activateManualMode("text", textPositions, false, hText));
+
+            // Nút khôi phục lại quyền điều khiển tự động cho Camera cử chỉ
+            if(btnReset) {
+                btnReset.addEventListener('click', () => {
+                    isManualMode = false;
+                    btnReset.classList.add('hidden');
+                    const statusText = document.getElementById('status-text');
+                    if(statusText) statusText.innerText = "Đang chờ bàn tay...";
+                });
+            }
+        }
+
+        // --- XỬ LÝ NHẬN DIỆN CỬ CHỈ QUA CAMERA ---
         function onHandResults(results) {
-            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) return;
+            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+                if(!isManualMode) {
+                    const statusDot = document.getElementById('status-dot');
+                    const statusText = document.getElementById('status-text');
+                    if(statusDot) statusDot.className = "w-2 h-2 rounded-full bg-red-500 animate-ping";
+                    if(statusText) statusText.innerText = "Đang chờ bàn tay...";
+                }
+                return;
+            }
+
+            if(!isManualMode) {
+                const statusDot = document.getElementById('status-dot');
+                const statusText = document.getElementById('status-text');
+                if(statusDot) statusDot.className = "w-2 h-2 rounded-full bg-green-500";
+                if(statusText) statusText.innerText = "Đã khóa mục tiêu tay";
+            }
+
+            // Nếu người dùng đang chọn thủ công bằng cách bấm bảng chỉ dẫn, bỏ qua xử lý logic camera dưới đây
+            if (isManualMode) return; 
 
             const landmarks = results.multiHandLandmarks[0];
             const isFingerOpen = (tipIdx, pipIdx) => landmarks[tipIdx].y < landmarks[pipIdx].y;
@@ -356,18 +442,23 @@
             if (ringOpen) openedFingersCount++;
             if (pinkyOpen) openedFingersCount++;
 
-            // 1. Logic Thumbs Up (Giơ ngón cái hướng lên, các ngón khác nắm chặt)
+            // 1. Cử chỉ Giơ ngón cái (Thumbs up)
             const isThumbsUpPose = (landmarks[4].y < landmarks[2].y) && (landmarks[4].y < landmarks[5].y) && !indexOpen && !middleOpen && !ringOpen && !pinkyOpen;
 
-            // 2. Logic Finger Heart (Bắn tim 2 ngón)
+            // 2. Cử chỉ Bắn tim (Finger heart)
             const distThumbIndex = Math.hypot(landmarks[4].x - landmarks[8].x, landmarks[4].y - landmarks[8].y);
             const isFingerHeartPose = (distThumbIndex < 0.08) && (landmarks[8].y < landmarks[4].y) && !middleOpen && !ringOpen && !pinkyOpen && !isThumbsUpPose;
 
-            // --- ĐIỀU PHỐI TRẠNG THÁI ---
+            const hHeart = document.getElementById('hint-heart');
+            const hThumb = document.getElementById('hint-thumb');
+            const hBurst = document.getElementById('hint-burst');
+            const hText = document.getElementById('hint-text');
+
             if (isThumbsUpPose) {
                 if (currentMode !== "thumb") {
                     currentMode = "thumb";
-                    toggleCoupleInterface(true); // Hiện khung ảnh đôi ngay lập tức
+                    toggleCoupleInterface(true); 
+                    highlightHint(hThumb);
                     morph(heartThumbPositions, 1.8);
                 }
             } 
@@ -375,6 +466,7 @@
                 if (currentMode !== "text") {
                     currentMode = "text";
                     toggleCoupleInterface(false);
+                    highlightHint(hText);
                     morph(textPositions, 2.0);
                 }
             } 
@@ -382,16 +474,39 @@
                 if (currentMode !== "burst") {
                     currentMode = "burst";
                     toggleCoupleInterface(false);
+                    highlightHint(hBurst);
                     morph(explosionPositions, 1.6);
                 }
             } 
-            else if (!indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
+            else {
                 if (currentMode !== "heart") {
                     currentMode = "heart";
-                    toggleCoupleInterface(false); // Ẩn đi để quay lại hình trái tim hạt
+                    toggleCoupleInterface(false); 
+                    highlightHint(hHeart);
                     morph(heartPositions, 2.0);
                 }
             }
+        }
+
+        function highlightHint(element) {
+            if(!element) return;
+            resetHints();
+            element.style.opacity = "1"; 
+            element.style.color = "#ff1493";
+            element.style.background = "rgba(255, 20, 147, 0.15)"; 
+            element.style.borderColor = "rgba(255, 20, 147, 0.4)";
+        }
+
+        function resetHints() {
+            ['hint-burst', 'hint-heart', 'hint-text', 'hint-thumb'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) { 
+                    el.style.opacity = "0.5"; 
+                    el.style.color = "white"; 
+                    el.style.background = "transparent"; 
+                    el.style.borderColor = "transparent"; 
+                }
+            });
         }
 
         function onWindowResize() {
