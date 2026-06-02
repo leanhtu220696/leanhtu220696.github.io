@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gửi Chinh - Advanced Hand Tracking 3D</title>
+    <title>Gửi Chinh - Advanced Hand Tracking & Voice 3D</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
@@ -21,7 +21,6 @@
         body { margin: 0; overflow: hidden; background: #030008; font-family: 'Segoe UI', sans-serif; }
         #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
         #video { position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-        
         .glass-panel {
             background: rgba(12, 3, 20, 0.75);
             backdrop-filter: blur(15px);
@@ -29,7 +28,6 @@
             border-radius: 16px;
             box-shadow: 0 0 35px rgba(255, 20, 147, 0.2);
         }
-        
         .btn-hint {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid transparent;
@@ -42,24 +40,21 @@
             opacity: 1 !important;
         }
 
-        /* Avatar Container Styling */
-        .avatar-container {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            border: 4px solid #ff1493;
-            box-shadow: 0 0 25px rgba(255, 20, 147, 0.8);
-            overflow: hidden;
-            transition: all 0.5s ease;
+        /* Khung ảnh đôi lãng mạn */
+        #couple-interface {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .heart-center {
-            font-size: 2.5rem;
-            animation: pulse-heart 0.8s infinite alternate ease-in-out;
-            filter: drop-shadow(0 0 10px rgba(255, 20, 147, 0.9));
-        }
-        @keyframes pulse-heart {
-            from { transform: scale(0.9); }
-            to { transform: scale(1.15); }
+        #couple-interface.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
         }
 
         @media (max-width: 767px) and (orientation: portrait) {
@@ -91,12 +86,30 @@
         <div class="text-pink-400 text-xs font-mono uppercase tracking-wider">Xoay ngang điện thoại để có góc nhìn tốt nhất!</div>
     </div>
 
+    <div id="couple-interface" class="flex items-center justify-center gap-8 md:gap-16">
+        <div class="relative w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-pink-500 shadow-[0_0_30px_rgba(255,20,147,0.6)] overflow-hidden animate-pulse">
+            <img src="anh_toi.jpg" alt="Anh" class="w-full h-full object-cover">
+        </div>
+        
+        <div class="text-5xl md:text-6xl animate-bounce drop-shadow-[0_0_15px_rgba(255,20,147,0.8)]">❤️</div>
+        
+        <div class="relative w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-pink-500 shadow-[0_0_30px_rgba(255,20,147,0.6)] overflow-hidden animate-pulse" style="animation-delay: 0.5s;">
+            <img src="co_ay.jpg" alt="Cô Ấy" class="w-full h-full object-cover">
+        </div>
+    </div>
+
     <div class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 p-6 flex flex-col justify-between hidden md:block">
         <div class="glass-panel p-4 w-72 pointer-events-auto">
             <h1 class="text-pink-500 text-xl font-bold mb-1 tracking-wider">COUPLE CORE v12.0</h1>
-            <div class="flex items-center gap-2 bg-black/40 rounded-full px-3 py-1 w-fit border border-pink-500/10 mb-4">
-                <div id="status-dot" class="w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
-                <span id="status-text" class="text-[10px] text-gray-300 font-mono uppercase tracking-wider">Đang quét cử chỉ tay...</span>
+            <div class="flex flex-col gap-1.5 mb-4">
+                <div class="flex items-center gap-2 bg-black/40 rounded-full px-3 py-1 w-fit border border-pink-500/10">
+                    <div id="status-dot" class="w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
+                    <span id="status-text" class="text-[10px] text-gray-300 font-mono uppercase tracking-wider">Đang quét cử chỉ tay...</span>
+                </div>
+                <div class="flex items-center gap-2 bg-black/40 rounded-full px-3 py-1 w-fit border border-pink-500/10">
+                    <div id="voice-dot" class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></div>
+                    <span id="voice-text" class="text-[10px] text-pink-300 font-mono uppercase tracking-wider">🎤 Đang nghe giọng nói...</span>
+                </div>
             </div>
             
             <div class="text-[12px] text-pink-200/70 font-mono space-y-2 border-t border-pink-500/10 pt-3">
@@ -104,34 +117,13 @@
                     <span>❤️</span> <span><b>Nắm tay:</b> Trái tim hạt cơ bản</span>
                 </button>
 
-                <button id="hint-thumb" class="btn-hint w-full text-left p-2 rounded-lg opacity-50 flex items-center gap-2">
-                    <span>👍</span> <span><b>Giơ ngón cái:</b> Khung ảnh đôi + Trái tim</span>
-                </button>
-
                 <button id="hint-burst" class="btn-hint w-full text-left p-2 rounded-lg opacity-50 flex items-center gap-2">
                     <span>👋</span> <span><b>Xòe 5 ngón:</b> Siêu bùng nổ vũ trụ</span>
                 </button>
                 
                 <button id="hint-text" class="btn-hint w-full text-left p-2 rounded-lg opacity-50 flex items-center gap-2">
-                    <span>🫰</span> <span><b>Bắn tim (2 ngón):</b> Hiển thị mật mã chữ</span>
+                    <span>🫰</span> <span><b>Bắn tim / Nói "Đồng ý":</b> Hiện mật mã tình yêu</span>
                 </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="couple-interface" class="fixed inset-0 z-30 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-700 ease-out transform scale-90">
-        <div class="p-8 rounded-3xl max-w-md w-11/12 flex flex-col items-center">
-            
-            <div class="flex items-center justify-center gap-6 md:gap-10 mb-8 relative">
-                <div class="avatar-container">
-                    <img src="anh_toi.jpg" alt="Bạn" class="w-full h-full object-cover">
-                </div>
-                
-                <div class="heart-center z-10">❤️</div>
-                
-                <div class="avatar-container">
-                    <img src="co_ay.jpg" alt="Chinh" class="w-full h-full object-cover">
-                </div>
             </div>
         </div>
     </div>
@@ -162,7 +154,6 @@
         let currentMode = "heart"; 
         let activeTween = null;
 
-        let spherePositions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
         let heartPositions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
         let textPositions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
         let explosionPositions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
@@ -218,6 +209,7 @@
             });
             
             initHandDetector();
+            initVoiceRecognition(); // Gọi khởi tạo nhận diện giọng nói
             window.addEventListener('resize', onWindowResize);
             
             document.getElementById('loader-overlay').style.opacity = '0';
@@ -248,8 +240,8 @@
 
         function precalculateShapes() {
             const linesData = [
-                { text: "LAM NGUOI YEU", yOffset: 2.5, scale: 1.0 },
-                { text: "ANH NHE CHINH", yOffset: -2.5, scale: 1.0 }
+                { text: "LAM NGUOI YEU", yOffset: 4.5, scale: 1.0 },
+                { text: "ANH NHE CHINH", yOffset: -5.5, scale: 1.0 }
             ];
 
             const fontDefs = getFontSegments();
@@ -285,16 +277,14 @@
                 if (allSegments.length > 0) {
                     const seg = allSegments[Math.floor(Math.random() * allSegments.length)];
                     const ratio = Math.random();
-                    textPositions[i*3]     = seg.x1 + (seg.x2 - seg.x1) * ratio + (Math.random() - 0.5) * 0.12;
-                    textPositions[i*3+1]   = seg.y1 + (seg.y2 - seg.y1) * ratio + (Math.random() - 0.5) * 0.12;
-                    textPositions[i*3+2]   = (Math.random() - 0.5) * 0.3;
-                } else {
-                    textPositions[i*3] = (Math.random() - 0.5) * 10; textPositions[i*3+1] = (Math.random() - 0.5) * 5; textPositions[i*3+2] = 0;
+                    textPositions[i*3]     = seg.x1 + (seg.x2 - seg.x1) * ratio + (Math.random() - 0.5) * 0.15;
+                    textPositions[i*3+1]   = seg.y1 + (seg.y2 - seg.y1) * ratio + (Math.random() - 0.5) * 0.15;
+                    textPositions[i*3+2]   = (Math.random() - 0.5) * 0.5;
                 }
 
-                explosionPositions[i*3] = heartPositions[i*3] * 2.5;
-                explosionPositions[i*3+1] = heartPositions[i*3+1] * 2.5;
-                explosionPositions[i*3+2] = heartPositions[i*3+2] * 2.5;
+                explosionPositions[i*3] = heartPositions[i*3] * 3.5;
+                explosionPositions[i*3+1] = heartPositions[i*3+1] * 3.5;
+                explosionPositions[i*3+2] = heartPositions[i*3+2] * 3.5;
             }
         }
 
@@ -330,19 +320,62 @@
             });
         }
 
-        // Hàm điều khiển bật tắt mượt mà giao diện Khung Ảnh Đôi
-        function toggleCoupleInterface(show) {
-            const coupleUI = document.getElementById('couple-interface');
-            if (!coupleUI) return;
-            if (show) {
-                coupleUI.style.opacity = "1";
-                coupleUI.style.pointerEvents = "auto";
-                coupleUI.style.transform = "scale(1)";
-            } else {
-                coupleUI.style.opacity = "0";
-                coupleUI.style.pointerEvents = "none";
-                coupleUI.style.transform = "scale(0.9)";
+        // --- TÍNH NĂNG NHẬN DIỆN GIỌNG NÓI ---
+        function initVoiceRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                const voiceText = document.getElementById('voice-text');
+                if (voiceText) voiceText.innerText = "🎤 Trình duyệt không hỗ trợ Mic";
+                return;
             }
+
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = false;
+            recognition.lang = 'vi-VN'; // Set ngôn ngữ Tiếng Việt
+
+            recognition.onstart = () => {
+                console.log("Speech recognition started...");
+            };
+
+            recognition.onresult = (event) => {
+                const resultIndex = event.resultIndex;
+                const transcript = event.results[resultIndex][0].transcript.toLowerCase().trim();
+                console.log("Nghe thấy chữ:", transcript);
+
+                // Kiểm tra từ khóa điều kiện để kích hoạt hiệu ứng cầu hôn thành công
+                if (transcript.includes("em đồng ý") || transcript.includes("đồng ý")) {
+                    triggerEngagementEffect();
+                }
+            };
+
+            recognition.onend = () => {
+                // Tự động khởi động lại micro khi bị ngắt kết nối để liên tục lắng nghe cô ấy
+                recognition.start();
+            };
+
+            recognition.start();
+        }
+
+        // Kích hoạt giao diện khớp ảnh đôi như thiết kế của bạn
+        function triggerEngagementEffect() {
+            isManualMode = true; // Khóa điều khiển tay để ưu tiên giao diện giọng nói thành công
+            
+            // 1. Chuyển hạt thành dòng chữ tỏ tình
+            currentMode = "text";
+            morph(textPositions, 2.5);
+            
+            // 2. Kích hoạt hiện khung ảnh cặp đôi
+            const couplePanel = document.getElementById('couple-interface');
+            if (couplePanel) {
+                couplePanel.classList.add('active');
+            }
+
+            // 3. Cập nhật trạng thái thông báo hệ thống panel
+            const voiceText = document.getElementById('voice-text');
+            const voiceDot = document.getElementById('voice-dot');
+            if (voiceText) voiceText.innerText = "🎉 CẦU HÔN THÀNH CÔNG!";
+            if (voiceDot) voiceDot.className = "w-2 h-2 rounded-full bg-green-400 animate-ping";
         }
 
         async function initCamera() {
@@ -372,15 +405,15 @@
             const hBurst = document.getElementById('hint-burst');
             const hHeart = document.getElementById('hint-heart');
             const hText = document.getElementById('hint-text');
-            const hThumb = document.getElementById('hint-thumb');
 
-            if(hHeart) hHeart.addEventListener('click', () => { isManualMode = true; currentMode = "heart"; toggleCoupleInterface(false); highlightHint(hHeart); morph(heartPositions, 2.0); });
-            if(hThumb) hThumb.addEventListener('click', () => { isManualMode = true; currentMode = "thumb"; toggleCoupleInterface(true); highlightHint(hThumb); morph(heartPositions, 2.0); });
-            if(hBurst) hBurst.addEventListener('click', () => { isManualMode = true; currentMode = "burst"; toggleCoupleInterface(false); highlightHint(hBurst); morph(explosionPositions, 1.8); });
-            if(hText) hText.addEventListener('click', () => { isManualMode = true; currentMode = "text"; toggleCoupleInterface(false); highlightHint(hText); morph(textPositions, 2.2); });
+            if(hHeart) hHeart.addEventListener('click', () => { isManualMode = true; currentMode = "heart"; document.getElementById('couple-interface').classList.remove('active'); morph(heartPositions, 2.0); });
+            if(hBurst) hBurst.addEventListener('click', () => { isManualMode = true; currentMode = "burst"; document.getElementById('couple-interface').classList.remove('active'); morph(explosionPositions, 1.8); });
+            if(hText) hText.addEventListener('click', () => { triggerEngagementEffect(); });
         }
 
         function onHandResults(results) {
+            if (isManualMode) return; // Nếu đã nói "đồng ý" thì khóa điều khiển cử chỉ tay để giữ màn hình đẹp
+
             if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
                 const statusDot = document.getElementById('status-dot');
                 const statusText = document.getElementById('status-text');
@@ -395,8 +428,6 @@
             if(statusText) statusText.innerText = "Đã khóa mục tiêu tay";
 
             const landmarks = results.multiHandLandmarks[0];
-            
-            // Phân tích trạng thái đóng mở của 4 ngón chính (trục Y)
             const isFingerOpen = (tipIdx, pipIdx) => landmarks[tipIdx].y < landmarks[pipIdx].y;
 
             const indexOpen  = isFingerOpen(8, 6);
@@ -410,71 +441,25 @@
             if (ringOpen) openedFingersCount++;
             if (pinkyOpen) openedFingersCount++;
 
-            // --- TRẠNG THÁI 1: BẮN TIM (FINGER HEART) ---
             const distThumbIndex = Math.hypot(landmarks[4].x - landmarks[8].x, landmarks[4].y - landmarks[8].y);
             const isFingerHeartPose = (distThumbIndex < 0.08) && (landmarks[8].y < landmarks[4].y) && !middleOpen && !ringOpen && !pinkyOpen;
 
-            // --- TRẠNG THÁI 2: GIƠ NGÓN CÁI (THUMB UP) ---
-            // Ngón cái nằm cao hơn hẳn điểm gốc ngón trỏ (5) và các ngón còn lại đều phải nắm chặt
-            const isThumbUpPose = (landmarks[4].y < landmarks[5].y) && (landmarks[4].y < landmarks[2].y) && !indexOpen && !middleOpen && !ringOpen && !pinkyOpen;
-
-            if (isManualMode) return; 
-
-            const hBurst = document.getElementById('hint-burst');
-            const hHeart = document.getElementById('hint-heart');
-            const hText = document.getElementById('hint-text');
-            const hThumb = document.getElementById('hint-thumb');
-
-            // 1. Cử chỉ Giơ ngón cái -> Hiện Khung ảnh Đôi
-            if (isThumbUpPose) {
-                if (currentMode !== "thumb") {
-                    currentMode = "thumb";
-                    if(!isMobile) highlightHint(hThumb);
-                    toggleCoupleInterface(true); // Hiển thị khung ảnh đôi
-                    morph(heartPositions, 1.5); // Giữ hạt thành khối trái tim nền 3D
-                }
-            }
-            // 2. Cử chỉ Bắn tim -> Hiện mật mã chữ
-            else if (isFingerHeartPose) {
-                if (currentMode !== "text") {
-                    currentMode = "text";
-                    if(!isMobile) highlightHint(hText);
-                    toggleCoupleInterface(false);
-                    morph(textPositions, 2.0);
-                }
-            }
-            // 3. Xòe bàn tay (3 đến 5 ngón) -> Bùng nổ không gian
-            else if (openedFingersCount >= 3) {
-                if (currentMode !== "burst") {
-                    currentMode = "burst";
-                    if(!isMobile) highlightHint(hBurst); 
-                    toggleCoupleInterface(false);
-                    morph(explosionPositions, 1.8);
-                }
-            }
-            // 4. Nắm tay chặt hoặc Trạng thái rảnh -> Reset về khối trái tim mặc định
-            else if (!indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
+            if (!indexOpen && !middleOpen && !ringOpen && !pinkyOpen && !isFingerHeartPose) {
                 if (currentMode !== "heart") {
                     currentMode = "heart";
-                    if(!isMobile) highlightHint(hHeart); 
-                    toggleCoupleInterface(false); // Ẩn giao diện ảnh đôi đi
                     morph(heartPositions, 2.0);
                 }
             }
-        }
-
-        function highlightHint(element) {
-            if(!element) return;
-            resetHints();
-            element.style.opacity = "1"; element.style.color = "#ff1493";
-            element.style.background = "rgba(255, 20, 147, 0.15)"; element.style.borderColor = "rgba(255, 20, 147, 0.4)";
-        }
-
-        function resetHints() {
-            ['hint-burst', 'hint-heart', 'hint-text', 'hint-thumb'].forEach(id => {
-                const el = document.getElementById(id);
-                if(el) { el.style.opacity = "0.5"; el.style.color = "white"; el.style.background = "transparent"; el.style.borderColor = "transparent"; }
-            });
+            else if (isFingerHeartPose) {
+                // Kích hoạt bằng cử chỉ bắn tim tay 2 ngón (giống như bằng giọng nói)
+                triggerEngagementEffect();
+            }
+            else if (openedFingersCount >= 3) {
+                if (currentMode !== "burst") {
+                    currentMode = "burst";
+                    morph(explosionPositions, 1.8);
+                }
+            }
         }
 
         function onWindowResize() {
