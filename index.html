@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gửi Chinh - Advanced Hand Tracking 3D</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -39,6 +39,21 @@
             color: #ff1493 !important;
             opacity: 1 !important;
         }
+
+        /* LOGIC FORCE ROTATE LANDSCAPE CHO MOBILE BẰNG CSS */
+        @media (max-width: 767px) and (orientation: portrait) {
+            #canvas-container {
+                width: 100vh !important;
+                height: 100vw !important;
+                transform: rotate(90deg);
+                transform-origin: top left;
+                top: 0;
+                left: 100vw;
+            }
+            #rotate-instruction {
+                display: flex !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -48,6 +63,11 @@
     <div id="loader-overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black transition-opacity duration-700">
         <div class="w-12 h-12 border-4 border-pink-500/20 border-l-pink-500 rounded-full animate-spin mb-4"></div>
         <div class="text-pink-500 text-xl font-bold tracking-widest uppercase animate-pulse">Đang đồng bộ ma trận hạt...</div>
+    </div>
+
+    <div id="rotate-instruction" class="fixed inset-0 z-40 hidden flex-col items-center justify-center bg-black/80 pointer-events-none text-center p-4">
+        <div class="animate-bounce text-3xl mb-2">🔄</div>
+        <div class="text-pink-400 text-xs font-mono uppercase tracking-wider">Xoay ngang điện thoại để trải nghiệm tốt nhất!</div>
     </div>
 
     <div class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 p-6 flex flex-col justify-between hidden md:block">
@@ -74,10 +94,6 @@
                 <button id="btn-reset" class="btn-hint w-full text-left p-2 rounded-lg opacity-50 flex items-center gap-2 text-gray-400">
                     <span>✊</span> <span><b>Nắm tay lại:</b> Trở lại thiên hà cầu</span>
                 </button>
-                
-                <div class="text-[11px] text-pink-400/80 bg-pink-950/20 p-2 rounded-lg border border-pink-500/10 mt-2">
-                    <span>🕹️</span> <b>Điều khiển:</b> Khi giơ 1 ngón trỏ, hệ thống khóa tự xoay nền. Bạn di chuyển ngón trỏ đến đâu, góc nhìn không gian sẽ xoay theo hướng đó!
-                </div>
             </div>
         </div>
     </div>
@@ -89,15 +105,13 @@
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-        // Tự động kiểm tra cấu hình thiết bị di động
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
 
         const CONFIG = {
-            // Giảm số lượng hạt trên Mobile xuống 25k để mượt mà khi đa nhiệm, PC giữ nguyên 75k
-            PARTICLE_COUNT: isMobile ? 25000 : 75000, 
-            PARTICLE_SIZE: isMobile ? 0.16 : 0.12,   // Tăng nhẹ kích thước hạt trên mobile để nhìn dày dặn hơn
+            PARTICLE_COUNT: isMobile ? 30000 : 75000, 
+            PARTICLE_SIZE: isMobile ? 0.13 : 0.12,   
             COLOR_PINK: 0xff1493,  
-            VIDEO_WIDTH: isMobile ? 320 : 640,       // Hạ độ phân giải camera xử lý trên mobile để nhẹ CPU
+            VIDEO_WIDTH: isMobile ? 320 : 640,       
             VIDEO_HEIGHT: isMobile ? 240 : 480,
             DEFAULT_ROTATE_SPEED: 0.4
         };
@@ -120,16 +134,21 @@
             scene.fog = new THREE.FogExp2(0x030008, 0.01);
 
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 0, isMobile ? 32 : 28); // Đẩy camera ra xa một chút trên mobile để cân đối màn hình dọc
+            camera.position.set(0, 0, 28); // Khi đã xoay ngang màn hình, khoảng cách camera 28 là chuẩn đẹp nhất cho mọi thiết bị
 
             renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: false, powerPreference: "high-performance" });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            // Giới hạn pixel ratio tối đa là 1.5 trên mobile để tối ưu hóa đa nhiệm hiệu năng GPU
+            
+            // Xử lý kích thước Renderer chuẩn xác bất kể trạng thái xoay dọc CSS mobile
+            if (isMobile && window.innerHeight > window.innerWidth) {
+                renderer.setSize(window.innerHeight, window.innerWidth);
+            } else {
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+            
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
             const renderScene = new RenderPass(scene, camera);
-            // Giảm bớt tham số Bloom trên điện thoại tránh drop fps
             const bloomPass = new UnrealBloomPass(
                 new THREE.Vector2(window.innerWidth, window.innerHeight), 
                 isMobile ? 1.5 : 2.2, 
@@ -154,7 +173,7 @@
 
             precalculateShapes();
             createParticleSystem();
-            if (!isMobile) setupClickEvents(); // Chỉ cấu hình sự kiện click nếu panel hiển thị (PC)
+            if (!isMobile) setupClickEvents(); 
 
             await initCamera().catch(() => {
                 const statusText = document.getElementById('status-text');
@@ -192,16 +211,16 @@
 
         function precalculateShapes() {
             const linesData = [
-                { text: "LAM NGUOI YEU", yOffset: isMobile ? 3.5 : 2.5, scale: isMobile ? 0.8 : 1.0 },
-                { text: "ANH NHE CHINH", yOffset: isMobile ? -3.5 : -2.5, scale: isMobile ? 0.8 : 1.0 }
+                { text: "LAM NGUOI YEU", yOffset: 2.5, scale: 1.0 },
+                { text: "ANH NHE CHINH", yOffset: -2.5, scale: 1.0 }
             ];
 
             const fontDefs = getFontSegments();
             let allSegments = [];
             linesData.forEach(lineObj => {
-                let currentX = - (lineObj.text.length * 2.5 * lineObj.scale) / 2;
+                let currentX = - (lineObj.text.length * 2.5) / 2;
                 for (let char of lineObj.text) {
-                    if (char === ' ') { currentX += 2.2 * lineObj.scale; continue; }
+                    if (char === ' ') { currentX += 2.2; continue; }
                     const segs = fontDefs[char];
                     if (segs) {
                         segs.forEach(s => {
@@ -211,7 +230,7 @@
                             });
                         });
                     }
-                    currentX += 2.6 * lineObj.scale;
+                    currentX += 2.6;
                 }
             });
 
@@ -220,7 +239,7 @@
                 const v = Math.random();
                 const theta = u * 2.0 * Math.PI;
                 const phi = Math.acos(2.0 * v - 1.0);
-                const r = (isMobile ? 8 : 10) + Math.random() * 2;
+                const r = 10 + Math.random() * 2;
                 spherePositions[i*3] = r * Math.sin(phi) * Math.cos(theta);
                 spherePositions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
                 spherePositions[i*3+2] = r * Math.cos(phi);
@@ -230,7 +249,7 @@
                 let hx = 16 * Math.pow(Math.sin(t), 3);
                 let hy = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
 
-                const heartScale = isMobile ? 0.6 : 0.75;
+                const heartScale = 0.75;
                 heartPositions[i*3]     = (hx * heartScale) * rFactor + (Math.random() - 0.5) * 0.4;
                 heartPositions[i*3+1]   = (hy * heartScale - 1.0) * rFactor + (Math.random() - 0.5) * 0.4;
                 heartPositions[i*3+2]   = (Math.random() - 0.5) * 2.5 * (1.0 - rFactor * 0.5);
@@ -245,9 +264,9 @@
                     textPositions[i*3] = (Math.random() - 0.5) * 10; textPositions[i*3+1] = (Math.random() - 0.5) * 5; textPositions[i*3+2] = 0;
                 }
 
-                explosionPositions[i*3] = spherePositions[i*3] * 2.5;
-                explosionPositions[i*3+1] = spherePositions[i*3+1] * 2.5;
-                explosionPositions[i*3+2] = spherePositions[i*3+2] * 2.5;
+                explosionPositions[i*3] = spherePositions[i*3] * 2.3;
+                explosionPositions[i*3+1] = spherePositions[i*3+1] * 2.3;
+                explosionPositions[i*3+2] = spherePositions[i*3+2] * 2.3;
             }
         }
 
@@ -320,21 +339,11 @@
 
         function onHandResults(results) {
             if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
-                const statusDot = document.getElementById('status-dot');
-                const statusText = document.getElementById('status-text');
-                if(statusDot) statusDot.className = "w-2 h-2 rounded-full bg-red-500 animate-ping";
-                if(statusText) statusText.innerText = "Đang chờ bàn tay...";
-                
                 if(!isManualMode || currentMode !== "heart") {
                     controls.autoRotate = true;
                 }
                 return;
             }
-
-            const statusDot = document.getElementById('status-dot');
-            const statusText = document.getElementById('status-text');
-            if(statusDot) statusDot.className = "w-2 h-2 rounded-full bg-green-500";
-            if(statusText) statusText.innerText = "Đã khóa mục tiêu tay";
 
             const landmarks = results.multiHandLandmarks[0];
             const isFingerOpen = (tipIdx, pipIdx) => landmarks[tipIdx].y < landmarks[pipIdx].y;
@@ -353,8 +362,17 @@
             if (indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
                 controls.autoRotate = false;
 
-                const fingerX = (landmarks[8].x - 0.5) * 2; 
-                const fingerY = (landmarks[8].y - 0.5) * 2;
+                // Đồng bộ hóa tọa độ tay thích ứng theo cả 2 trạng thái: Cầm máy ngang vs Ép xoay CSS máy dọc
+                let fingerX, fingerY;
+                if (window.innerHeight > window.innerWidth) {
+                    // Khi đang ở chế độ xoay dọc CSS: Hoán đổi trục X và Y của MediaPipe để hướng di chuyển tay không bị đảo lộn
+                    fingerX = (landmarks[8].y - 0.5) * 2;
+                    fingerY = (0.5 - landmarks[8].x) * 2;
+                } else {
+                    // Khi đang cầm máy ngang chuẩn
+                    fingerX = (landmarks[8].x - 0.5) * 2; 
+                    fingerY = (landmarks[8].y - 0.5) * 2;
+                }
 
                 const targetAzimuth = -fingerX * Math.PI;            
                 const targetPolar = Math.PI / 2 + (fingerY * Math.PI / 4); 
@@ -376,31 +394,22 @@
 
             if (isManualMode) return; 
 
-            const hBurst = document.getElementById('hint-burst');
-            const hHeart = document.getElementById('hint-heart');
-            const hText = document.getElementById('hint-text');
-            const btnReset = document.getElementById('btn-reset');
-
             if (!indexOpen && !middleOpen && !ringOpen && !pinkyOpen) {
                 if (currentMode !== "sphere") {
                     currentMode = "sphere";
-                    if(!isMobile) highlightHint(btnReset); 
                     morph(spherePositions, 2.0);
                 }
             }
             else if (openedFingersCount >= 3 && currentMode !== "burst") {
                 currentMode = "burst";
-                if(!isMobile) highlightHint(hBurst); 
                 morph(explosionPositions, 1.8);
             } 
             else if (indexOpen && !middleOpen && !ringOpen && !pinkyOpen && currentMode !== "heart") {
                 currentMode = "heart";
-                if(!isMobile) highlightHint(hHeart); 
                 morph(heartPositions, 2.2);
             } 
             else if (indexOpen && middleOpen && !ringOpen && !pinkyOpen && currentMode !== "text") {
                 currentMode = "text";
-                if(!isMobile) highlightHint(hText); 
                 morph(textPositions, 2.2);
             }
         }
@@ -420,8 +429,20 @@
         }
 
         function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight); composer.setSize(window.innerWidth, window.innerHeight);
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+
+            // Nếu là điện thoại đang ở chế độ dọc, hoán đổi width/height cho tỷ lệ Camera ThreeJS chuẩn ngang
+            if (isMobile && height > width) {
+                camera.aspect = height / width;
+                renderer.setSize(height, width);
+                composer.setSize(height, width);
+            } else {
+                camera.aspect = width / height;
+                renderer.setSize(width, height);
+                composer.setSize(width, height);
+            }
+            camera.updateProjectionMatrix();
         }
 
         function animate() {
