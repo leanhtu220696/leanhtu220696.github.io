@@ -40,7 +40,7 @@
             opacity: 1 !important;
         }
 
-        /* Khung ảnh đôi lãng mạn */
+        /* Giao diện ảnh đôi lãng mạn */
         #couple-interface {
             position: absolute;
             top: 50%;
@@ -66,9 +66,6 @@
                 top: 0;
                 left: 100vw;
             }
-            #rotate-instruction {
-                display: flex !important;
-            }
         }
     </style>
 </head>
@@ -78,12 +75,7 @@
     
     <div id="loader-overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black transition-opacity duration-700">
         <div class="w-12 h-12 border-4 border-pink-500/20 border-l-pink-500 rounded-full animate-spin mb-4"></div>
-        <div class="text-pink-500 text-xl font-bold tracking-widest uppercase animate-pulse">Đang thiết lập không gian trái tim...</div>
-    </div>
-
-    <div id="rotate-instruction" class="fixed inset-0 z-40 hidden flex-col items-center justify-center bg-black/80 pointer-events-none text-center p-4">
-        <div class="animate-bounce text-3xl mb-2">🔄</div>
-        <div class="text-pink-400 text-xs font-mono uppercase tracking-wider">Xoay ngang điện thoại để có góc nhìn tốt nhất!</div>
+        <div id="loader-text" class="text-pink-500 text-xl font-bold tracking-widest uppercase text-center px-4">Đang khởi tạo không gian 3D...</div>
     </div>
 
     <div id="couple-interface" class="flex items-center justify-center gap-8 md:gap-16">
@@ -98,32 +90,35 @@
         </div>
     </div>
 
-    <div class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 p-6 flex flex-col justify-between hidden md:block">
-        <div class="glass-panel p-4 w-72 pointer-events-auto">
-            <h1 class="text-pink-500 text-xl font-bold mb-1 tracking-wider">COUPLE CORE v12.0</h1>
-            <div class="flex flex-col gap-1.5 mb-4">
-                <div class="flex items-center gap-2 bg-black/40 rounded-full px-3 py-1 w-fit border border-pink-500/10">
-                    <div id="status-dot" class="w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
-                    <span id="status-text" class="text-[10px] text-gray-300 font-mono uppercase tracking-wider">Đang quét cử chỉ tay...</span>
+    <div class="absolute top-6 left-6 z-10 w-80 pointer-events-auto">
+        <div class="glass-panel p-5">
+            <h1 class="text-pink-500 text-xl font-bold mb-2 tracking-wider">COUPLE CORE v12.1</h1>
+            
+            <div class="flex flex-col gap-2 mb-4">
+                <div class="flex items-center gap-2 bg-black/40 rounded-full px-3 py-1 w-full border border-pink-500/10">
+                    <div id="status-dot" class="w-2.5 h-2.5 rounded-full bg-yellow-500 animate-pulse"></div>
+                    <span id="status-text" class="text-[11px] text-gray-300 font-mono uppercase tracking-wider">Đang chờ camera...</span>
                 </div>
-                <div class="flex items-center gap-2 bg-black/40 rounded-full px-3 py-1 w-fit border border-pink-500/10">
-                    <div id="voice-dot" class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></div>
-                    <span id="voice-text" class="text-[10px] text-pink-300 font-mono uppercase tracking-wider">🎤 Đang nghe giọng nói...</span>
+                <div class="flex items-center gap-2 bg-black/40 rounded-full px-3 py-1 w-full border border-pink-500/10">
+                    <div id="voice-dot" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></div>
+                    <span id="voice-text" class="text-[11px] text-pink-300 font-mono tracking-wider">🎤 Đang khởi động Microphone...</span>
                 </div>
             </div>
             
             <div class="text-[12px] text-pink-200/70 font-mono space-y-2 border-t border-pink-500/10 pt-3">
                 <button id="hint-heart" class="btn-hint w-full text-left p-2 rounded-lg opacity-50 flex items-center gap-2">
-                    <span>❤️</span> <span><b>Nắm tay:</b> Trái tim hạt cơ bản</span>
+                    <span>❤️</span> <span><b>Nắm tay:</b> Khối hình Trái tim</span>
                 </button>
-
                 <button id="hint-burst" class="btn-hint w-full text-left p-2 rounded-lg opacity-50 flex items-center gap-2">
-                    <span>👋</span> <span><b>Xòe 5 ngón:</b> Siêu bùng nổ vũ trụ</span>
+                    <span>👋</span> <span><b>Xòe tay:</b> Siêu bùng nổ vũ trụ</span>
                 </button>
-                
                 <button id="hint-text" class="btn-hint w-full text-left p-2 rounded-lg opacity-50 flex items-center gap-2">
-                    <span>🫰</span> <span><b>Bắn tim / Nói "Đồng ý":</b> Hiện mật mã tình yêu</span>
+                    <span>💬</span> <span><b>Nói "Đồng ý":</b> Hiện mật mã chữ + Ảnh</span>
                 </button>
+            </div>
+
+            <div id="debug-log" class="mt-3 text-[10px] bg-black/60 p-2 rounded text-gray-400 font-mono max-h-16 overflow-y-auto border border-white/5">
+                Hệ thống: Sẵn sàng thiết lập.
             </div>
         </div>
     </div>
@@ -138,8 +133,8 @@
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
 
         const CONFIG = {
-            PARTICLE_COUNT: isMobile ? 30000 : 75000, 
-            PARTICLE_SIZE: isMobile ? 0.13 : 0.12,   
+            PARTICLE_COUNT: isMobile ? 35000 : 75000, 
+            PARTICLE_SIZE: isMobile ? 0.14 : 0.12,   
             COLOR_PINK: 0xff1493,  
             VIDEO_WIDTH: isMobile ? 320 : 640,       
             VIDEO_HEIGHT: isMobile ? 240 : 480,
@@ -150,13 +145,20 @@
         let particles = null;
         let video, hands;
         
-        let isManualMode = false; 
+        let isActivated = false; 
         let currentMode = "heart"; 
         let activeTween = null;
 
         let heartPositions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
         let textPositions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
         let explosionPositions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
+
+        function printLog(msg) {
+            const logger = document.getElementById('debug-log');
+            if (logger) {
+                logger.innerText = "Log: " + msg;
+            }
+        }
 
         async function init() {
             scene = new THREE.Scene();
@@ -166,25 +168,19 @@
             camera.position.set(0, 0, 28); 
 
             renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: false, powerPreference: "high-performance" });
-            
-            if (isMobile && window.innerHeight > window.innerWidth) {
-                renderer.setSize(window.innerHeight, window.innerWidth);
-            } else {
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
-            
+            renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
             const renderScene = new RenderPass(scene, camera);
             const bloomPass = new UnrealBloomPass(
                 new THREE.Vector2(window.innerWidth, window.innerHeight), 
-                isMobile ? 1.5 : 2.2, 
+                isMobile ? 1.4 : 2.2, 
                 0.4, 
                 0.85
             );
             bloomPass.threshold = 0.0;
-            bloomPass.strength = isMobile ? 1.4 : 2.0; 
+            bloomPass.strength = isMobile ? 1.2 : 2.0; 
             bloomPass.radius = 0.5;
             composer = new EffectComposer(renderer);
             composer.addPass(renderScene);
@@ -201,22 +197,25 @@
 
             precalculateShapes();
             createParticleSystem();
-            if (!isMobile) setupClickEvents(); 
+            setupClickEvents(); 
 
-            await initCamera().catch(() => {
+            document.getElementById('loader-text').innerText = "Đang xin quyền truy cập thiết bị...";
+
+            await initCamera().catch((err) => {
+                printLog("Không mở được cam: " + err.message);
                 const statusText = document.getElementById('status-text');
-                if(statusText) statusText.innerText = "CAMERA BYPASS MODE";
+                if(statusText) statusText.innerText = "CAMERA TRỰC QUAN KHÓA";
             });
             
             initHandDetector();
-            initVoiceRecognition(); // Gọi khởi tạo nhận diện giọng nói
+            initVoiceRecognition(); 
             window.addEventListener('resize', onWindowResize);
             
-            document.getElementById('loader-overlay').style.opacity = '0';
-            setTimeout(() => {
-                const loader = document.getElementById('loader-overlay');
-                if(loader) loader.remove();
-            }, 700);
+            const loader = document.getElementById('loader-overlay');
+            if(loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 700);
+            }
 
             animate();
         }
@@ -320,62 +319,90 @@
             });
         }
 
-        // --- TÍNH NĂNG NHẬN DIỆN GIỌNG NÓI ---
+        function resetHints() {
+            ['hint-burst', 'hint-heart', 'hint-text'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) { 
+                    el.style.opacity = "0.5"; 
+                }
+            });
+        }
+
+        function highlightHint(id) {
+            resetHints();
+            const el = document.getElementById(id);
+            if(el) el.style.opacity = "1";
+        }
+
+        // --- HÀM LẮNG NGHE GIỌNG NÓI CHUẨN XÁC ---
         function initVoiceRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const voiceText = document.getElementById('voice-text');
+            const voiceDot = document.getElementById('voice-dot');
+
             if (!SpeechRecognition) {
-                const voiceText = document.getElementById('voice-text');
-                if (voiceText) voiceText.innerText = "🎤 Trình duyệt không hỗ trợ Mic";
+                if (voiceText) voiceText.innerText = "🎤 Trình duyệt chặn/không hỗ trợ Mic";
+                printLog("Trình duyệt không hỗ trợ Web Speech API.");
                 return;
             }
 
             const recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = false;
-            recognition.lang = 'vi-VN'; // Set ngôn ngữ Tiếng Việt
+            recognition.lang = 'vi-VN'; 
 
             recognition.onstart = () => {
-                console.log("Speech recognition started...");
+                if (voiceText) voiceText.innerText = "🎤 Đang chờ nói 'Em đồng ý'...";
+                if (voiceDot) voiceDot.className = "w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse";
+                printLog("Microphone hoạt động, đang lắng nghe...");
+            };
+
+            recognition.onerror = (e) => {
+                printLog("Lỗi Mic: " + e.error);
             };
 
             recognition.onresult = (event) => {
                 const resultIndex = event.resultIndex;
                 const transcript = event.results[resultIndex][0].transcript.toLowerCase().trim();
-                console.log("Nghe thấy chữ:", transcript);
+                printLog("Nghe thấy âm thanh: " + transcript);
 
-                // Kiểm tra từ khóa điều kiện để kích hoạt hiệu ứng cầu hôn thành công
-                if (transcript.includes("em đồng ý") || transcript.includes("đồng ý")) {
+                // KIỂM TRA CHẶN CHẶT CHẼ: Phải chứa từ khóa mới mở giao diện
+                if (transcript.includes("đồng ý") || transcript.includes("dong y")) {
                     triggerEngagementEffect();
                 }
             };
 
             recognition.onend = () => {
-                // Tự động khởi động lại micro khi bị ngắt kết nối để liên tục lắng nghe cô ấy
-                recognition.start();
+                // Tự động bật lại mic nếu trang chưa được kích hoạt thành công
+                if (!isActivated) {
+                    try { recognition.start(); } catch(err) {}
+                }
             };
 
-            recognition.start();
+            try { recognition.start(); } catch(e) {}
         }
 
-        // Kích hoạt giao diện khớp ảnh đôi như thiết kế của bạn
+        // HÀM KÍCH HOẠT DUY NHẤT: CHỈ CHẠY KHI NGHE GIỌNG NÓI HOẶC CLICK THỦ CÔNG
         function triggerEngagementEffect() {
-            isManualMode = true; // Khóa điều khiển tay để ưu tiên giao diện giọng nói thành công
+            if (isActivated) return;
+            isActivated = true; 
             
-            // 1. Chuyển hạt thành dòng chữ tỏ tình
+            // 1. Chuyển đổi hạt thành Chữ Tỏ Tình vĩnh viễn
             currentMode = "text";
-            morph(textPositions, 2.5);
+            highlightHint('hint-text');
+            morph(textPositions, 2.2);
             
-            // 2. Kích hoạt hiện khung ảnh cặp đôi
+            // 2. Kích hoạt giao diện ảnh đôi lãng mạn
             const couplePanel = document.getElementById('couple-interface');
-            if (couplePanel) {
-                couplePanel.classList.add('active');
-            }
+            if (couplePanel) couplePanel.classList.add('active');
 
-            // 3. Cập nhật trạng thái thông báo hệ thống panel
+            // 3. Cập nhật Panel trạng thái hệ thống
             const voiceText = document.getElementById('voice-text');
             const voiceDot = document.getElementById('voice-dot');
-            if (voiceText) voiceText.innerText = "🎉 CẦU HÔN THÀNH CÔNG!";
-            if (voiceDot) voiceDot.className = "w-2 h-2 rounded-full bg-green-400 animate-ping";
+            if (voiceText) voiceText.innerText = "🎉 CHINH ĐÃ ĐỒNG Ý!";
+            if (voiceDot) voiceDot.className = "w-2.5 h-2.5 rounded-full bg-green-400 animate-ping";
+            
+            printLog("Kích hoạt thành công chế độ hạnh phúc!");
         }
 
         async function initCamera() {
@@ -398,7 +425,7 @@
                     width: CONFIG.VIDEO_WIDTH, height: CONFIG.VIDEO_HEIGHT
                 });
                 cameraUtils.start();
-            } catch(e) { console.log("MediaPipe bypass"); }
+            } catch(e) { printLog("Lỗi nạp MediaPipe: " + e.message); }
         }
 
         function setupClickEvents() {
@@ -406,26 +433,26 @@
             const hHeart = document.getElementById('hint-heart');
             const hText = document.getElementById('hint-text');
 
-            if(hHeart) hHeart.addEventListener('click', () => { isManualMode = true; currentMode = "heart"; document.getElementById('couple-interface').classList.remove('active'); morph(heartPositions, 2.0); });
-            if(hBurst) hBurst.addEventListener('click', () => { isManualMode = true; currentMode = "burst"; document.getElementById('couple-interface').classList.remove('active'); morph(explosionPositions, 1.8); });
+            if(hHeart) hHeart.addEventListener('click', () => { if(isActivated) return; currentMode = "heart"; highlightHint('hint-heart'); morph(heartPositions, 2.0); });
+            if(hBurst) hBurst.addEventListener('click', () => { if(isActivated) return; currentMode = "burst"; highlightHint('hint-burst'); morph(explosionPositions, 1.8); });
             if(hText) hText.addEventListener('click', () => { triggerEngagementEffect(); });
         }
 
+        // XỬ LÝ KHÓA CAMERA: Không cho cử chỉ tay tự mở giao diện
         function onHandResults(results) {
-            if (isManualMode) return; // Nếu đã nói "đồng ý" thì khóa điều khiển cử chỉ tay để giữ màn hình đẹp
-
-            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
-                const statusDot = document.getElementById('status-dot');
-                const statusText = document.getElementById('status-text');
-                if(statusDot) statusDot.className = "w-2 h-2 rounded-full bg-red-500 animate-ping";
-                if(statusText) statusText.innerText = "Đang chờ bàn tay...";
-                return;
-            }
+            if (isActivated) return; // Đã chốt thành công -> Khóa toàn bộ cử chỉ tay lại
 
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
-            if(statusDot) statusDot.className = "w-2 h-2 rounded-full bg-green-500";
-            if(statusText) statusText.innerText = "Đã khóa mục tiêu tay";
+
+            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+                if(statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-red-500 animate-ping";
+                if(statusText) statusText.innerText = "Đang quét bàn tay...";
+                return;
+            }
+
+            if(statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-green-500";
+            if(statusText) statusText.innerText = "Đã tìm thấy bàn tay";
 
             const landmarks = results.multiHandLandmarks[0];
             const isFingerOpen = (tipIdx, pipIdx) => landmarks[tipIdx].y < landmarks[pipIdx].y;
@@ -441,23 +468,18 @@
             if (ringOpen) openedFingersCount++;
             if (pinkyOpen) openedFingersCount++;
 
-            const distThumbIndex = Math.hypot(landmarks[4].x - landmarks[8].x, landmarks[4].y - landmarks[8].y);
-            const isFingerHeartPose = (distThumbIndex < 0.08) && (landmarks[8].y < landmarks[4].y) && !middleOpen && !ringOpen && !pinkyOpen;
-
-            if (!indexOpen && !middleOpen && !ringOpen && !pinkyOpen && !isFingerHeartPose) {
-                if (currentMode !== "heart") {
-                    currentMode = "heart";
-                    morph(heartPositions, 2.0);
-                }
-            }
-            else if (isFingerHeartPose) {
-                // Kích hoạt bằng cử chỉ bắn tim tay 2 ngón (giống như bằng giọng nói)
-                triggerEngagementEffect();
-            }
-            else if (openedFingersCount >= 3) {
+            // Chỉ dùng tay để đổi dạng hạt (Xòe tay = Nổ, nắm tay = Trái tim)
+            if (openedFingersCount >= 3) {
                 if (currentMode !== "burst") {
                     currentMode = "burst";
+                    highlightHint('hint-burst');
                     morph(explosionPositions, 1.8);
+                }
+            } else {
+                if (currentMode !== "heart") {
+                    currentMode = "heart";
+                    highlightHint('hint-heart');
+                    morph(heartPositions, 2.0);
                 }
             }
         }
@@ -466,32 +488,29 @@
             let width = window.innerWidth;
             let height = window.innerHeight;
 
-            if (isMobile && height > width) {
-                camera.aspect = height / width;
-                renderer.setSize(height, width);
-                composer.setSize(height, width);
-            } else {
-                camera.aspect = width / height;
-                renderer.setSize(width, height);
-                composer.setSize(width, height);
-            }
+            camera.aspect = width / height;
             camera.updateProjectionMatrix();
+            
+            renderer.setSize(width, height);
+            composer.setSize(width, height);
         }
 
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
 
-            const posAttr = particles.geometry.attributes.position;
-            const posArray = posAttr.array;
-            const time = Date.now() * 0.002;
+            if (particles) {
+                const posAttr = particles.geometry.attributes.position;
+                const posArray = posAttr.array;
+                const time = Date.now() * 0.002;
 
-            for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
-                const idx = i * 3;
-                posArray[idx]   += Math.sin(time + i * 0.1) * 0.006;
-                posArray[idx+1] += Math.cos(time + i * 0.1) * 0.006;
+                for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
+                    const idx = i * 3;
+                    posArray[idx]   += Math.sin(time + i * 0.1) * 0.005;
+                    posArray[idx+1] += Math.cos(time + i * 0.1) * 0.005;
+                }
+                posAttr.needsUpdate = true;
             }
-            posAttr.needsUpdate = true;
 
             composer.render();
         }
