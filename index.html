@@ -66,11 +66,6 @@
             opacity: 1 !important;
         }
 
-        /* Hiệu ứng khung ảnh cặp đôi tròn phát sáng đường viền hồng */
-        .avatar-glow {
-            box-shadow: 0 0 30px rgba(255, 20, 147, 0.8), inset 0 0 15px rgba(255, 20, 147, 0.5);
-        }
-
         @media (max-width: 767px) and (orientation: portrait) {
             #canvas-container {
                 width: 100vh !important;
@@ -106,41 +101,10 @@
             nhất!</div>
     </div>
 
-    <div id="couple-overlay"
-        class="fixed inset-0 z-30 flex flex-col items-center justify-center pointer-events-none opacity-0 transition-opacity duration-1000">
-        <div class="flex items-center justify-center gap-8 md:gap-16 pointer-events-auto">
-            <div
-                class="w-32 h-32 md:w-56 md:h-56 rounded-full border-4 border-pink-500 overflow-hidden avatar-glow transform scale-0 transition-transform duration-1000 delay-300">
-                <img src="anh_toi.jpg" class="w-full h-full object-cover" alt="Anh">
-            </div>
-            <div
-                class="w-12 h-12 md:w-20 md:h-20 transform scale-0 transition-transform duration-1000 delay-700 animate-pulse">
-                <svg viewBox="0 0 32 32" fill="#ff1493"
-                    class="w-full h-full filter drop-shadow-[0_0_15px_rgba(255,20,147,0.9)]">
-                    <path
-                        d="M16 28.5s-12-7.16-12-14.5c0-4.42 3.58-8 8-8 2.62 0 4.94 1.26 6 3.2 1.06-1.94 3.38-3.2 6-3.2 4.42 0 8 3.58 8 8 0 7.34-12 14.5-12 14.5z" />
-                </svg>
-            </div>
-            <div
-                class="w-32 h-32 md:w-56 md:h-56 rounded-full border-4 border-pink-500 overflow-hidden avatar-glow transform scale-0 transition-transform duration-1000 delay-500">
-                <img src="co_ay.jpg" class="w-full h-full object-cover" alt="Em">
-            </div>
-        </div>
-    </div>
-
-    <div class="absolute top-6 right-6 pointer-events-none z-10 flex flex-col gap-2 items-end" style="display: none;"
-        id="gesture-instruction">
-        <div class="glass-panel px-4 py-2 flex items-center gap-2 border border-pink-500/20">
-            <div id="gesture-dot" class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>
-            <span id="gesture-text" class="text-[10px] text-pink-300 font-mono uppercase tracking-wider">GIƠ 3 NGÓN TAY
-                ĐỂ ĐỒNG Ý...</span>
-        </div>
-    </div>
-
     <div
         class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 p-6 flex flex-col justify-between hidden md:block">
-        <div class="glass-panel p-4 w-72 pointer-events-auto" style="display: none;" id="info-panel">
-            <h1 class="text-pink-500 text-xl font-bold mb-1 tracking-wider">HEART MATRIX v12.0</h1>
+        <div class="glass-panel p-4 w-72 pointer-events-auto">
+            <h1 class="text-pink-500 text-xl font-bold mb-1 tracking-wider">HEART MATRIX v10.0</h1>
             <div
                 class="flex items-center gap-2 bg-black/40 rounded-full px-3 py-1 w-fit border border-pink-500/10 mb-4">
                 <div id="status-dot" class="w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
@@ -190,9 +154,8 @@
         let video, hands;
 
         let isManualMode = false;
-        let currentMode = "heart";
+        let currentMode = "heart"; // Chuyển đổi mặc định ban đầu là Trái tim
         let activeTween = null;
-        let isAccepted = false; // Trạng thái khi nói "Đồng ý"
 
         let spherePositions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
         let heartPositions = new Float32Array(CONFIG.PARTICLE_COUNT * 3);
@@ -304,6 +267,7 @@
             });
 
             for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
+                // Precalculate Trái tim
                 const t = Math.PI - 2 * Math.PI * Math.random();
                 const rFactor = Math.sqrt(Math.random());
                 let hx = 16 * Math.pow(Math.sin(t), 3);
@@ -314,6 +278,7 @@
                 heartPositions[i * 3 + 1] = (hy * heartScale - 1.0) * rFactor + (Math.random() - 0.5) * 0.4;
                 heartPositions[i * 3 + 2] = (Math.random() - 0.5) * 2.5 * (1.0 - rFactor * 0.5);
 
+                // Precalculate Chữ nét mảnh
                 if (allSegments.length > 0) {
                     const seg = allSegments[Math.floor(Math.random() * allSegments.length)];
                     const ratio = Math.random();
@@ -324,6 +289,7 @@
                     textPositions[i * 3] = (Math.random() - 0.5) * 10; textPositions[i * 3 + 1] = (Math.random() - 0.5) * 5; textPositions[i * 3 + 2] = 0;
                 }
 
+                // Precalculate Bùng nổ không gian
                 explosionPositions[i * 3] = heartPositions[i * 3] * 2.5;
                 explosionPositions[i * 3 + 1] = heartPositions[i * 3 + 1] * 2.5;
                 explosionPositions[i * 3 + 2] = heartPositions[i * 3 + 2] * 2.5;
@@ -332,6 +298,7 @@
 
         function createParticleSystem() {
             const geometry = new THREE.BufferGeometry();
+            // Khởi tạo hạt nằm ngay ở vị trí hình TRÁI TIM ban đầu
             geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(heartPositions), 3));
 
             const canvas = document.createElement('canvas');
@@ -374,12 +341,7 @@
         function initHandDetector() {
             try {
                 hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
-                hands.setOptions({
-                    maxNumHands: 1,
-                    modelComplexity: 0, // Mức 0 là nhanh nhất (Lightweight)
-                    minDetectionConfidence: 0.5, // Giảm từ 0.6 xuống 0.5 để bắt tay dễ hơn
-                    minTrackingConfidence: 0.5   // Giảm từ 0.6 xuống 0.5 để giữ tay ổn định hơn
-                });
+                hands.setOptions({ maxNumHands: 1, modelComplexity: 0, minDetectionConfidence: 0.6, minTrackingConfidence: 0.6 });
                 hands.onResults(onHandResults);
 
                 const cameraUtils = new Camera(video, {
@@ -390,51 +352,15 @@
             } catch (e) { console.log("MediaPipe bypass"); }
         }
 
-        function checkPinkyFingerOnly(landmarks) {
-            const isFingerOpen = (tipIdx, pipIdx) => landmarks[tipIdx].y < landmarks[pipIdx].y;
-
-            const indexOpen = isFingerOpen(8, 6);    // Ngón trỏ
-            const middleOpen = isFingerOpen(12, 10); // Ngón giữa
-            const ringOpen = isFingerOpen(16, 14);   // Ngón áp út
-            const pinkyOpen = isFingerOpen(20, 18);  // Ngón út
-
-            // Kích hoạt khi chỉ ngón út mở, các ngón khác đóng
-            return pinkyOpen && !indexOpen && !middleOpen && !ringOpen;
-        }
-        // --- HIỆU ỨNG KHI NÓI ĐỒNG Ý ---
-        function triggerCoupleActivation() {
-            isManualMode = true;
-            currentMode = "burst";
-
-            // SỬA ĐÚNG ID TẠI ĐÂY
-            document.getElementById('gesture-dot').className = "w-2 h-2 rounded-full bg-pink-500";
-            document.getElementById('gesture-text').innerText = "❤️ TRÁI TIM ĐÃ KẾT NỐI ❤️";
-
-            controls.autoRotateSpeed = 4.0;
-            morph(explosionPositions, 1.5);
-
-            const overlay = document.getElementById('couple-overlay');
-            overlay.classList.remove('opacity-0', 'pointer-events-none');
-            overlay.classList.add('opacity-100');
-
-            const avatars = overlay.querySelectorAll('.transform');
-            avatars.forEach(el => {
-                el.classList.remove('scale-0');
-                el.classList.add('scale-100');
-            });
-        }
-
         function setupClickEvents() {
             const hBurst = document.getElementById('hint-burst');
             const hHeart = document.getElementById('hint-heart');
             const hText = document.getElementById('hint-text');
 
-            if (hHeart) hHeart.addEventListener('click', () => { if (isAccepted) return; isManualMode = true; currentMode = "heart"; controls.autoRotate = true; highlightHint(hHeart); morph(heartPositions, 2.0); });
-            if (hBurst) hBurst.addEventListener('click', () => { if (isAccepted) return; isManualMode = true; currentMode = "burst"; controls.autoRotate = true; highlightHint(hBurst); morph(explosionPositions, 1.8); });
-            if (hText) hText.addEventListener('click', () => { if (isAccepted) return; isManualMode = true; currentMode = "text"; controls.autoRotate = true; highlightHint(hText); morph(textPositions, 2.2); });
+            if (hHeart) hHeart.addEventListener('click', () => { isManualMode = true; currentMode = "heart"; controls.autoRotate = true; highlightHint(hHeart); morph(heartPositions, 2.0); });
+            if (hBurst) hBurst.addEventListener('click', () => { isManualMode = true; currentMode = "burst"; controls.autoRotate = true; highlightHint(hBurst); morph(explosionPositions, 1.8); });
+            if (hText) hText.addEventListener('click', () => { isManualMode = true; currentMode = "text"; controls.autoRotate = true; highlightHint(hText); morph(textPositions, 2.2); });
         }
-
-        let currentRotationY = 0;
 
         function onHandResults(results) {
             if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
@@ -444,6 +370,7 @@
                 if (statusText) statusText.innerText = "Đang chờ bàn tay...";
                 return;
             }
+
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
             if (statusDot) statusDot.className = "w-2 h-2 rounded-full bg-green-500";
@@ -451,58 +378,54 @@
 
             const landmarks = results.multiHandLandmarks[0];
 
-            if (isAccepted) return; // Nếu đã đồng ý thì khóa camera tracker nhường chỗ cho hiệu ứng cặp đôi
+            // Hàm kiểm tra ngón tay xòe tiêu chuẩn dựa trên trục Y
+            const isFingerOpen = (tipIdx, pipIdx) => landmarks[tipIdx].y < landmarks[pipIdx].y;
 
-            const indexFingerTip = landmarks[8];
-            const targetRotationY = (indexFingerTip.x - 0.5) * 4;
-            currentRotationY += (targetRotationY - currentRotationY) * 0.1;
-            scene.rotation.y = currentRotationY;
-            if (!isAccepted && checkPinkyFingerOnly(landmarks)) {
-                isAccepted = true;
-                triggerCoupleActivation();
-            } else {
-                const isFingerOpen = (tipIdx, pipIdx) => landmarks[tipIdx].y < landmarks[pipIdx].y;
+            const indexOpen = isFingerOpen(8, 6);
+            const middleOpen = isFingerOpen(12, 10);
+            const ringOpen = isFingerOpen(16, 14);
+            const pinkyOpen = isFingerOpen(20, 18);
 
-                const indexOpen = isFingerOpen(8, 6);
-                const middleOpen = isFingerOpen(12, 10);
-                const ringOpen = isFingerOpen(16, 14);
-                const pinkyOpen = isFingerOpen(20, 18);
+            let openedFingersCount = 0;
+            if (indexOpen) openedFingersCount++;
+            if (middleOpen) openedFingersCount++;
+            if (ringOpen) openedFingersCount++;
+            if (pinkyOpen) openedFingersCount++;
 
-                let openedFingersCount = 0;
-                if (indexOpen) openedFingersCount++;
-                if (middleOpen) openedFingersCount++;
-                if (ringOpen) openedFingersCount++;
-                if (pinkyOpen) openedFingersCount++;
+            // --- LOGIC NHẬN DIỆN CỬ CHỈ BẮN TIM (FINGER HEART) ---
+            // Khoảng cách giữa đầu ngón cái (4) và đầu ngón trỏ (8)
+            const distThumbIndex = Math.hypot(landmarks[4].x - landmarks[8].x, landmarks[4].y - landmarks[8].y);
+            // Ngón trỏ nhô cao hơn ngón cái một chút theo chiều dọc môi trường ảnh vật lý
+            const isFingerHeartPose = (distThumbIndex < 0.08) && (landmarks[8].y < landmarks[4].y) && !middleOpen && !ringOpen && !pinkyOpen;
 
-                const distThumbIndex = Math.hypot(landmarks[4].x - landmarks[8].x, landmarks[4].y - landmarks[8].y);
-                const isFingerHeartPose = (distThumbIndex < 0.08) && (landmarks[8].y < landmarks[4].y) && !middleOpen && !ringOpen && !pinkyOpen;
+            if (isManualMode) return;
 
-                if (isManualMode) return;
+            const hBurst = document.getElementById('hint-burst');
+            const hHeart = document.getElementById('hint-heart');
+            const hText = document.getElementById('hint-text');
 
-                const hBurst = document.getElementById('hint-burst');
-                const hHeart = document.getElementById('hint-heart');
-                const hText = document.getElementById('hint-text');
-
-                if (!indexOpen && !middleOpen && !ringOpen && !pinkyOpen && !isFingerHeartPose) {
-                    if (currentMode !== "heart") {
-                        currentMode = "heart";
-                        if (!isMobile) highlightHint(hHeart);
-                        morph(heartPositions, 2.0);
-                    }
+            // 1. Nắm tay lại (Không ngón nào mở) hoặc Trạng thái tĩnh -> Quay về TRÁI TIM
+            if (!indexOpen && !middleOpen && !ringOpen && !pinkyOpen && !isFingerHeartPose) {
+                if (currentMode !== "heart") {
+                    currentMode = "heart";
+                    if (!isMobile) highlightHint(hHeart);
+                    morph(heartPositions, 2.0);
                 }
-                else if (isFingerHeartPose) {
-                    if (currentMode !== "text") {
-                        currentMode = "text";
-                        if (!isMobile) highlightHint(hText);
-                        morph(textPositions, 2.0);
-                    }
+            }
+            // 2. Cử chỉ Bắn tim (Hình ảnh yêu cầu) -> Hiện DÒNG CHỮ
+            else if (isFingerHeartPose) {
+                if (currentMode !== "text") {
+                    currentMode = "text";
+                    if (!isMobile) highlightHint(hText);
+                    morph(textPositions, 2.0);
                 }
-                else if (openedFingersCount >= 3) {
-                    if (currentMode !== "burst") {
-                        currentMode = "burst";
-                        if (!isMobile) highlightHint(hBurst);
-                        morph(explosionPositions, 1.8);
-                    }
+            }
+            // 3. Xòe bàn tay rộng (Từ 3 đến 5 ngón mở) -> BÙNG NỔ VŨ TRỤ
+            else if (openedFingersCount >= 3) {
+                if (currentMode !== "burst") {
+                    currentMode = "burst";
+                    if (!isMobile) highlightHint(hBurst);
+                    morph(explosionPositions, 1.8);
                 }
             }
         }
@@ -517,7 +440,7 @@
         function resetHints() {
             ['hint-burst', 'hint-heart', 'hint-text'].forEach(id => {
                 const el = document.getElementById(id);
-                if (el) { el.style.opacity = "0.5"; el.style.color = "white"; el.style.background = "transparent"; el.style.borderColor = "transparent"; }
+                if (el) { el.style.opacity = "0.5"; el.style.color = "white"; el.style.background = "transparent"; r.style.borderColor = "transparent"; }
             });
         }
 
@@ -545,13 +468,10 @@
             const posArray = posAttr.array;
             const time = Date.now() * 0.002;
 
-            // Nếu đã đồng ý, các hạt sẽ có độ rung mạnh (như vụ nổ tinh vân lấp lánh bao quanh ảnh)
-            const speedFactor = isAccepted ? 0.02 : 0.006;
-
             for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
                 const idx = i * 3;
-                posArray[idx] += Math.sin(time + i * 0.1) * speedFactor;
-                posArray[idx + 1] += Math.cos(time + i * 0.1) * speedFactor;
+                posArray[idx] += Math.sin(time + i * 0.1) * 0.006;
+                posArray[idx + 1] += Math.cos(time + i * 0.1) * 0.006;
             }
             posAttr.needsUpdate = true;
 

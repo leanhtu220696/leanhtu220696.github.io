@@ -374,7 +374,12 @@
         function initHandDetector() {
             try {
                 hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
-                hands.setOptions({ maxNumHands: 1, modelComplexity: 0, minDetectionConfidence: 0.6, minTrackingConfidence: 0.6 });
+                hands.setOptions({
+                    maxNumHands: 1,
+                    modelComplexity: 0, // Mức 0 là nhanh nhất (Lightweight)
+                    minDetectionConfidence: 0.5, // Giảm từ 0.6 xuống 0.5 để bắt tay dễ hơn
+                    minTrackingConfidence: 0.5   // Giảm từ 0.6 xuống 0.5 để giữ tay ổn định hơn
+                });
                 hands.onResults(onHandResults);
 
                 const cameraUtils = new Camera(video, {
@@ -429,6 +434,8 @@
             if (hText) hText.addEventListener('click', () => { if (isAccepted) return; isManualMode = true; currentMode = "text"; controls.autoRotate = true; highlightHint(hText); morph(textPositions, 2.2); });
         }
 
+        let currentRotationY = 0;
+
         function onHandResults(results) {
             if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
                 const statusDot = document.getElementById('status-dot');
@@ -447,8 +454,9 @@
             if (isAccepted) return; // Nếu đã đồng ý thì khóa camera tracker nhường chỗ cho hiệu ứng cặp đôi
 
             const indexFingerTip = landmarks[8];
-            const rotationY = (indexFingerTip.x - 0.5) * 4;
-            scene.rotation.y = rotationY;
+            const targetRotationY = (indexFingerTip.x - 0.5) * 4;
+            currentRotationY += (targetRotationY - currentRotationY) * 0.1;
+            scene.rotation.y = currentRotationY;
             if (!isAccepted && checkPinkyFingerOnly(landmarks)) {
                 isAccepted = true;
                 triggerCoupleActivation();
