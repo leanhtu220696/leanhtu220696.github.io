@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,10 +20,34 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
     <style>
-        body { margin: 0; overflow: hidden; background: #020205; font-family: 'Segoe UI', sans-serif; }
-        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
-        #video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); z-index: 1; opacity: 0.7; }
-        
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #020205;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            z-index: 1;
+            opacity: 0.7;
+        }
+
         .glass-panel {
             background: rgba(10, 10, 20, 0.7);
             backdrop-filter: blur(16px);
@@ -30,25 +55,36 @@
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
         }
+
         .control-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
+
         .control-btn:hover {
             background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
         }
+
         .control-btn.active {
             background: linear-gradient(135deg, rgba(100, 200, 255, 0.4), rgba(100, 200, 255, 0.1));
             border: 1px solid rgba(100, 200, 255, 0.5);
             box-shadow: 0 0 25px rgba(79, 209, 197, 0.3);
         }
+
         #loader-overlay {
-            position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.95);
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.95);
             transition: opacity 0.7s ease;
         }
+
         .loader {
             border: 3px solid rgba(255, 255, 255, 0.1);
             border-left-color: #00ffff;
@@ -57,15 +93,37 @@
             height: 50px;
             animation: spin 0.8s linear infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .mode-item { transition: all 0.2s ease; opacity: 0.4; transform: scale(0.95); }
-        .mode-item.active { opacity: 1; transform: scale(1.0); color: #22d3ee; font-weight: bold; text-shadow: 0 0 10px rgba(34, 211, 238, 0.4); }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .mode-item {
+            transition: all 0.2s ease;
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        .mode-item.active {
+            opacity: 1;
+            transform: scale(1.0);
+            color: #22d3ee;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
+        }
     </style>
 </head>
+
 <body>
     <div id="canvas-container"></div>
     <video id="video" playsinline></video>
-    
+
     <div id="loader-overlay">
         <div class="loader mb-6"></div>
         <div class="text-cyan-300 text-2xl font-bold tracking-widest uppercase">Dual System</div>
@@ -81,7 +139,8 @@
                 </h1>
                 <div class="flex items-center gap-3 bg-black/30 rounded-full px-3 py-1 w-fit border border-white/5">
                     <div id="status-dot" class="w-2 h-2 rounded-full bg-red-500 transition-all duration-500"></div>
-                    <span id="status-text" class="text-[10px] text-gray-300 font-mono uppercase tracking-wider">Initializing</span>
+                    <span id="status-text"
+                        class="text-[10px] text-gray-300 font-mono uppercase tracking-wider">Initializing</span>
                 </div>
                 <div id="gesture-modes" class="text-[10px] text-gray-400 mt-3 font-mono border-t border-white/10 pt-2">
                     <div id="mode-scale" class="mode-item">👋 Five Fingers: Energy Burst (Scale)</div>
@@ -91,32 +150,61 @@
             </div>
 
             <div class="flex gap-3">
-                <button onclick="toggleFullScreen()" class="glass-panel p-4 text-white hover:text-cyan-300 control-btn rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                <button onclick="toggleFullScreen()"
+                    class="glass-panel p-4 text-white hover:text-cyan-300 control-btn rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                     </svg>
                 </button>
             </div>
         </div>
 
-        <div id="particle-controls" class="pointer-events-auto flex flex-col md:flex-row gap-6 items-end md:items-center justify-between w-full">
+        <div id="particle-controls"
+            class="pointer-events-auto flex flex-col md:flex-row gap-6 items-end md:items-center justify-between w-full">
             <div class="glass-panel p-2 flex gap-2 overflow-x-auto max-w-full">
-                <button onclick="changeShape('sphere')" class="control-btn active px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="sphere">Nebula</button>
-                <button onclick="changeShape('heart')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="heart">Heart</button>
-                <button onclick="changeShape('saturn')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="saturn">Saturn</button>
-                <button onclick="changeShape('lotus')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="lotus">Lotus</button>
-                <button onclick="changeShape('galaxy')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="galaxy">Galaxy</button>
-                <button onclick="changeShape('jellyfish')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="jellyfish">Jellyfish</button>
-                <button onclick="changeShape('torus')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="torus">Torus</button>
-                <button onclick="changeShape('tornado')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="tornado">Tornado</button>
-                <button onclick="changeShape('doublehelix')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="doublehelix">Double Helix</button>
-                <button onclick="changeShape('cube')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="cube">Cube</button>
-                <button onclick="changeShape('butterfly')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="butterfly">Butterfly</button>
-                <button onclick="changeShape('peachblossom')" class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap" data-shape="peachblossom">Peach Blossom</button>
+                <button onclick="changeShape('sphere')"
+                    class="control-btn active px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="sphere">Nebula</button>
+                <button onclick="changeShape('heart')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="heart">Heart</button>
+                <button onclick="changeShape('saturn')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="saturn">Saturn</button>
+                <button onclick="changeShape('lotus')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="lotus">Lotus</button>
+                <button onclick="changeShape('galaxy')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="galaxy">Galaxy</button>
+                <button onclick="changeShape('jellyfish')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="jellyfish">Jellyfish</button>
+                <button onclick="changeShape('torus')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="torus">Torus</button>
+                <button onclick="changeShape('tornado')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="tornado">Tornado</button>
+                <button onclick="changeShape('doublehelix')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="doublehelix">Double Helix</button>
+                <button onclick="changeShape('cube')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="cube">Cube</button>
+                <button onclick="changeShape('butterfly')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="butterfly">Butterfly</button>
+                <button onclick="changeShape('peachblossom')"
+                    class="control-btn px-6 py-3 rounded-lg text-sm text-white font-semibold whitespace-nowrap"
+                    data-shape="peachblossom">Peach Blossom</button>
             </div>
             <div class="glass-panel p-4 flex items-center gap-4">
                 <span class="text-white text-xs font-mono tracking-wider uppercase">Emission Color</span>
-                <input type="color" id="color-picker" value="#00ffff" class="w-8 h-8 rounded-full cursor-pointer" onchange="updateColor(this.value)">
+                <input type="color" id="color-picker" value="#00ffff" class="w-8 h-8 rounded-full cursor-pointer"
+                    onchange="updateColor(this.value)">
             </div>
         </div>
     </div>
@@ -172,7 +260,7 @@
         let lastTimeHandDetected = 0;
         let clock = new THREE.Clock();
         // 形状循环及手势“扇巴掌”检测
-        const SHAPES_ORDER = ['sphere','heart','saturn','lotus','galaxy','jellyfish','torus','tornado','doublehelix','cube','butterfly','peachblossom'];
+        const SHAPES_ORDER = ['sphere', 'heart', 'saturn', 'lotus', 'galaxy', 'jellyfish', 'torus', 'tornado', 'doublehelix', 'cube', 'butterfly', 'peachblossom'];
         let previousPalmPos = { x: 0, y: 0 };
         let lastSlapTime = 0;
 
@@ -265,7 +353,7 @@
 
             await initCamera();
             await initHandDetector();
-            
+
             if (!particles) createParticles();
             if (video) video.style.display = 'none';
 
@@ -358,7 +446,7 @@
                     const t = Math.PI - 2 * Math.PI * Math.random();
                     const u = 2 * Math.PI * Math.random();
                     x = 16 * Math.pow(Math.sin(t), 3);
-                    y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+                    y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
                     z = 6 * Math.cos(t) * Math.sin(u) * Math.sin(t);
                     const scale = 0.6;
                     x *= scale; y *= scale; z *= scale;
@@ -413,33 +501,33 @@
                         const particlesPerTentacle = (CONFIG.PARTICLE_COUNT * 0.75) / tentacleCount;
                         const tentacleIndex = Math.floor((i - CONFIG.PARTICLE_COUNT * 0.25) / particlesPerTentacle);
                         const posInTentacle = ((i - CONFIG.PARTICLE_COUNT * 0.25) % particlesPerTentacle) / particlesPerTentacle;
-                        
+
                         // 均匀分布在圆周上，稍有变化
                         const baseAngle = (tentacleIndex / tentacleCount) * Math.PI * 2;
                         const angleVariation = (Math.random() - 0.5) * 0.15;
                         const angle = baseAngle + angleVariation;
-                        
+
                         // 触手长度变化
                         const tentacleLengthVariation = 0.8 + Math.random() * 0.4;
                         const length = Math.pow(posInTentacle, 0.8) * tentacleLengthVariation;
-                        
+
                         // 很小的起始半径，让触手紧密聚拢
                         const radiusVariation = Math.random();
                         const startRadius = 2.5 + radiusVariation * 1;
-                        
+
                         // 微小的螺旋和弯曲效果
                         const spiral = Math.sin(length * Math.PI * 2 + tentacleIndex * 1.5) * (0.2 + length * 0.3);
                         const bendPhase = tentacleIndex * 0.5;
                         const bend = Math.sin(length * Math.PI * 1.2 + bendPhase) * (0.4 + length * 0.4);
-                        
+
                         // 触手几乎垂直向下，只略微向外
                         const radiusExpansion = startRadius + length * 0.15 + Math.abs(bend) * 0.05;
-                        
-                        x = radiusExpansion * Math.cos(angle) + bend * Math.cos(angle + Math.PI/4) + spiral * Math.cos(angle + Math.PI/2);
-                        z = radiusExpansion * Math.sin(angle) + bend * Math.sin(angle + Math.PI/4) + spiral * Math.sin(angle + Math.PI/2);
+
+                        x = radiusExpansion * Math.cos(angle) + bend * Math.cos(angle + Math.PI / 4) + spiral * Math.cos(angle + Math.PI / 2);
+                        z = radiusExpansion * Math.sin(angle) + bend * Math.sin(angle + Math.PI / 4) + spiral * Math.sin(angle + Math.PI / 2);
                         // 触手从伞体底部开始，主要向下延伸
                         y = 2 - radiusVariation * 0.3 - length * 20 - Math.abs(bend) * 0.2;
-                        
+
                         // 很小的随机扰动
                         x += (Math.random() - 0.5) * 0.4 * length;
                         z += (Math.random() - 0.5) * 0.4 * length;
@@ -670,7 +758,7 @@
 
         function onHandResults(results) {
             const now = Date.now();
-            
+
             if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
                 if (now - lastTimeHandDetected > 800) {
                     isHandDetected = false;
@@ -804,7 +892,7 @@
         }
 
         // ==================== 模式切换 ====================
-        window.switchMode = async function() {
+        window.switchMode = async function () {
             if (currentMode === 'face') {
                 currentMode = 'hand';
                 if (emotionOrb) {
@@ -812,7 +900,7 @@
                     scene.remove(emotionOrb);
                 }
                 if (video) video.style.display = 'none';
-                
+
                 if (!particles) createParticles();
                 particles.visible = true;
 
@@ -975,7 +1063,7 @@
                     tz *= finalScale;
 
                     if (currentShape === 'galaxy') {
-                        const angle = time * (0.1 + (1.0 - (Math.sqrt(tx*tx+tz*tz)/20)) * 0.5);
+                        const angle = time * (0.1 + (1.0 - (Math.sqrt(tx * tx + tz * tz) / 20)) * 0.5);
                         const cos = Math.cos(angle);
                         const sin = Math.sin(angle);
                         const rx = tx * cos - tz * sin;
@@ -1033,13 +1121,13 @@
                     } else if (currentShape === 'jellyfish') {
                         // 整体缓慢上下浮动
                         ty += Math.sin(time * 0.6) * 2;
-                        
+
                         // 伞体脉动参数（所有部分共享）- 减小脉动幅度
                         const pulse = Math.sin(time * 1.8) * 0.2;
-                        
+
                         // 伞状身体的脉动收缩 - 减小收缩幅度
                         if (i < CONFIG.PARTICLE_COUNT * 0.25) {
-                            const radialDist = Math.sqrt(tx*tx + tz*tz);
+                            const radialDist = Math.sqrt(tx * tx + tz * tz);
                             const pulseFactor = (1 + pulse * (radialDist / 10));
                             tx *= pulseFactor;
                             tz *= pulseFactor;
@@ -1047,25 +1135,25 @@
                         } else {
                             // 触手的复杂波动
                             const tentacleLength = Math.abs(ty - 2) / 20;
-                            
+
                             // 触手根部受伞体脉动影响（渐变过渡）
                             const bodyInfluence = Math.max(0, 1 - tentacleLength * 2);
-                            const radialDist = Math.sqrt(tx*tx + tz*tz);
+                            const radialDist = Math.sqrt(tx * tx + tz * tz);
                             const pulseFactor = (1 + pulse * bodyInfluence * 0.3);
                             tx *= pulseFactor;
                             tz *= pulseFactor;
                             ty += pulse * bodyInfluence * 0.8;
-                            
+
                             // 触手自身的波动
                             const wavePhase = time * 2.5 + i * 0.08;
                             const lateralWave = Math.sin(wavePhase + tentacleLength * Math.PI * 2) * (0.8 + tentacleLength * 1.2);
                             const spiralWave = Math.cos(wavePhase * 1.3 + tentacleLength * Math.PI) * 0.6;
-                            
+
                             // 触手末端摆动更大
                             const swayAmount = Math.pow(tentacleLength, 1.5);
                             tx += lateralWave * swayAmount;
                             tz += spiralWave * swayAmount;
-                            
+
                             // 触手垂直方向的波动
                             ty += Math.sin(time * 3 + i * 0.1) * (0.4 + swayAmount * 0.8);
                         }
@@ -1111,4 +1199,5 @@
         init();
     </script>
 </body>
+
 </html>
